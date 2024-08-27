@@ -48,28 +48,29 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(args, " ");
 	if(*arg == 'r') {
-		printf("eax  = %d\n", cpu.eax);
-		printf("ecx  = %d\n", cpu.ecx);
-		printf("edx  = %d\n", cpu.edx);
-		printf("ebx  = %d\n", cpu.ebx);
-		printf("esp  = %d\n", cpu.esp);
-		printf("ebp  = %d\n", cpu.ebp);
-		printf("esi  = %d\n", cpu.esi);
-		printf("edi  = %d\n", cpu.edi);
-		printf("eip  = %d\n", cpu.eip);
-		printf("AF   = %d\n", cpu.eflags.AF);
-		printf("CF   = %d\n", cpu.eflags.CF);
-		printf("DF   = %d\n", cpu.eflags.DF);
-		printf("IF   = %d\n", cpu.eflags.IF);
-		printf("OF   = %d\n", cpu.eflags.OF);
-		printf("PF   = %d\n", cpu.eflags.PF);
-		printf("NT   = %d\n", cpu.eflags.NT);
-		printf("IOPL = %d\n", cpu.eflags.IOPL);
-		printf("pad0 = %d\n", cpu.eflags.pad0);
-		printf("pad1 = %d\n", cpu.eflags.pad1);
-		printf("pad2 = %d\n", cpu.eflags.pad2);
-		printf("pad3 = %d\n", cpu.eflags.pad3);
-		printf("pad4 = %d\n", cpu.eflags.pad4);
+		printf("eax    = %d\n", cpu.eax);
+		printf("ecx    = %d\n", cpu.ecx);
+		printf("edx    = %d\n", cpu.edx);
+		printf("ebx    = %d\n", cpu.ebx);
+		printf("esp    = %d\n", cpu.esp);
+		printf("ebp    = %d\n", cpu.ebp);
+		printf("esi    = %d\n", cpu.esi);
+		printf("edi    = %d\n", cpu.edi);
+		printf("eip    = %d\n", cpu.eip);
+		printf("eflags = %d\n", cpu.eflags.val);
+		printf("AF     = %d\n", cpu.eflags.AF);
+		printf("CF     = %d\n", cpu.eflags.CF);
+		printf("DF     = %d\n", cpu.eflags.DF);
+		printf("IF     = %d\n", cpu.eflags.IF);
+		printf("OF     = %d\n", cpu.eflags.OF);
+		printf("PF     = %d\n", cpu.eflags.PF);
+		printf("NT     = %d\n", cpu.eflags.NT);
+		printf("IOPL   = %d\n", cpu.eflags.IOPL);
+		printf("pad0   = %d\n", cpu.eflags.pad0);
+		printf("pad1   = %d\n", cpu.eflags.pad1);
+		printf("pad2   = %d\n", cpu.eflags.pad2);
+		printf("pad3   = %d\n", cpu.eflags.pad3);
+		printf("pad4   = %d\n", cpu.eflags.pad4);
 	}
 	return 0;
 }
