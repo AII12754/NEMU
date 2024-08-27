@@ -36,6 +36,41 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
+static int cmd_si(char *args) {
+	//cpu_exec();
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	//TODO
+	return 0;
+}
+
+static int cmd_p(char *args) {
+	//TODO
+	return 0;
+}
+
+static int cmd_x(char *args) {
+	//TODO
+	return 0;
+}
+
+static int cmd_w(char *args) {
+	//TODO
+	return 0;
+}
+
+static int cmd_d(char *args) {
+	//TODO
+	return 0;
+}
+
+static int cmd_bt(char *args) {
+	//TODO
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,6 +81,13 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
+	{ "si", "execute next N instructions and then stop", cmd_si},
+	{ "info", "print the status of registers or the watchpoints", cmd_info},
+	{ "p", "print the value of the exprission", cmd_p},
+	{ "x", "print the following N * 4 bits in HEX", cmd_x},
+	{ "w", "when the exprission changes, the program will stop", cmd_w},
+	{ "d", "delete the watchpoint numbered N", cmd_d},
+	{ "bt", "print the stack frame chain", cmd_bt}
 
 	/* TODO: Add more commands */
 
