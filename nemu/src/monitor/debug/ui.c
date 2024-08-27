@@ -37,7 +37,11 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
-	//cpu_exec();
+	char *arg1 = strtok(args, " ");
+	int n;
+	if(arg1 == NULL) { n = 1; }
+	else { n = atoi(arg1); }
+	cpu_exec(n);
 	return 0;
 }
 
@@ -76,7 +80,7 @@ static int cmd_help(char *args);
 static struct {
 	char *name;
 	char *description;
-	int (*handler) (char *);
+	int (*handler) (char *);  //函数指针
 } cmd_table [] = {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
@@ -130,7 +134,7 @@ void ui_mainloop() {
 		/* treat the remaining string as the arguments,
 		 * which may need further parsing
 		 */
-		char *args = cmd + strlen(cmd) + 1;
+		char *args = cmd + strlen(cmd) + 1;   //此处已去掉首个空格
 		if(args >= str_end) {
 			args = NULL;
 		}
