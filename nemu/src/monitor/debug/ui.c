@@ -81,7 +81,17 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
-	//TODO
+	/***TODO
+	char *arg[2];
+	arg[0] = strtok(args, " ");
+	args += strlen(arg[0]) + 1;
+	arg[1] = strtok(args, " ");
+	int len = atoi(arg[0]);
+	int addr = strtol(arg[1], NULL, 16);
+	***/
+
+	
+
 	return 0;
 }
 

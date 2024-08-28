@@ -100,6 +100,7 @@ uint32_t dram_read(hwaddr_t addr, size_t len) {
 	uint32_t offset = addr & BURST_MASK;
 	uint8_t temp[2 * BURST_LEN];
 	
+	//每次输出BURST_LEN长度的数据，即八位数据
 	ddr3_read(addr, temp);
 
 	if(offset + len > BURST_LEN) {

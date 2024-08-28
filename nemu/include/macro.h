@@ -4,6 +4,7 @@
 #define str_temp(x) #x
 #define str(x) str_temp(x)
 
+//##连接前后两个变量
 #define concat_temp(x, y) x ## y
 #define concat(x, y) concat_temp(x, y)
 #define concat3(x, y, z) concat(concat(x, y), z)
