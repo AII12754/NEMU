@@ -48,29 +48,23 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(args, " ");
 	if(*arg == 'r') {
-		printf("eax    = %d\n", cpu.eax);
-		printf("ecx    = %d\n", cpu.ecx);
-		printf("edx    = %d\n", cpu.edx);
-		printf("ebx    = %d\n", cpu.ebx);
-		printf("esp    = %d\n", cpu.esp);
-		printf("ebp    = %d\n", cpu.ebp);
-		printf("esi    = %d\n", cpu.esi);
-		printf("edi    = %d\n", cpu.edi);
-		printf("eip    = %d\n", cpu.eip);
-		printf("eflags = %d\n", cpu.eflags.val);
-		printf("AF     = %d\n", cpu.eflags.AF);
-		printf("CF     = %d\n", cpu.eflags.CF);
-		printf("DF     = %d\n", cpu.eflags.DF);
-		printf("IF     = %d\n", cpu.eflags.IF);
-		printf("OF     = %d\n", cpu.eflags.OF);
-		printf("PF     = %d\n", cpu.eflags.PF);
-		printf("NT     = %d\n", cpu.eflags.NT);
-		printf("IOPL   = %d\n", cpu.eflags.IOPL);
-		printf("pad0   = %d\n", cpu.eflags.pad0);
-		printf("pad1   = %d\n", cpu.eflags.pad1);
-		printf("pad2   = %d\n", cpu.eflags.pad2);
-		printf("pad3   = %d\n", cpu.eflags.pad3);
-		printf("pad4   = %d\n", cpu.eflags.pad4);
+		printf("eax\t%u\t%X\n", cpu.eax, cpu.eax);
+		printf("ecx\t%u\t%X\n", cpu.ecx, cpu.ecx);
+		printf("edx\t%u\t%X\n", cpu.edx, cpu.edx);
+		printf("ebx\t%u\t%X\n", cpu.ebx, cpu.ebx);
+		printf("esp\t%u\t%X\n", cpu.esp, cpu.esp);
+		printf("ebp\t%u\t%X\n", cpu.ebp, cpu.ebp);
+		printf("esi\t%u\t%X\n", cpu.esi, cpu.esi);
+		printf("edi\t%u\t%X\n", cpu.edi, cpu.edi);
+		printf("eip\t%u\t%X\n", cpu.eip, cpu.eip);
+		printf("eflags\t%u\t%X\n", cpu.eflags.val, cpu.eflags.val);
+		printf("AF\t%u\t%X\n", cpu.eflags.AF, cpu.eflags.AF);
+		printf("CF\t%u\t%X\n", cpu.eflags.CF, cpu.eflags.CF);
+		printf("DF\t%u\t%X\n", cpu.eflags.DF, cpu.eflags.DF);
+		printf("IF\t%u\t%X\n", cpu.eflags.IF, cpu.eflags.IF);
+		printf("OF\t%u\t%X\n", cpu.eflags.OF, cpu.eflags.OF);
+		printf("PF\t%u\t%X\n", cpu.eflags.PF, cpu.eflags.PF);
+		printf("NT\t%u\t%X\n", cpu.eflags.NT, cpu.eflags.NT);
 	}
 	return 0;
 }
@@ -81,14 +75,14 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_x(char *args) {
-	/***TODO
+	//TODO
 	char *arg[2];
 	arg[0] = strtok(args, " ");
 	args += strlen(arg[0]) + 1;
 	arg[1] = strtok(args, " ");
-	int len = atoi(arg[0]);
-	int addr = strtol(arg[1], NULL, 16);
-	***/
+	//int len = atoi(arg[0]);
+	//long int addr = strtol(arg[1], NULL, 16);
+	
 
 	
 
