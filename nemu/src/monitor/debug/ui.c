@@ -60,8 +60,11 @@ static int cmd_si(char *args)
 static int cmd_info(char *args)
 {
 	char *arg = strtok(args, " ");
+	char *gpr_name[8] = { "EAX", "ECX", "EDX", "EBX", "ESP", "EBP", "ESI", "EDI" };
 	if (*arg == 'r')
 	{
+		for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", gpr_name[i], reg_l(i), reg_l(i));
+
 		printf("%-16s%-16u0X%08X\n", "eax", cpu.eax, cpu.eax);
 		printf("%-16s%-16u0X%08X\n", "ecx", cpu.ecx, cpu.ecx);
 		printf("%-16s%-16u0X%08X\n", "edx", cpu.edx, cpu.edx);
@@ -91,7 +94,6 @@ static int cmd_p(char *args)
 
 static int cmd_x(char *args)
 {
-	// TODO
 	char *arg[2];
 	arg[0] = strtok(args, " ");
 	args += strlen(arg[0]) + 1;
