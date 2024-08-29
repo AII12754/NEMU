@@ -48,23 +48,23 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(args, " ");
 	if(*arg == 'r') {
-		printf("eax\t%16u\t%16X\n", cpu.eax, cpu.eax);
-		printf("ecx\t%16u\t%16X\n", cpu.ecx, cpu.ecx);
-		printf("edx\t%16u\t%16X\n", cpu.edx, cpu.edx);
-		printf("ebx\t%16u\t%16X\n", cpu.ebx, cpu.ebx);
-		printf("esp\t%16u\t%16X\n", cpu.esp, cpu.esp);
-		printf("ebp\t%16u\t%16X\n", cpu.ebp, cpu.ebp);
-		printf("esi\t%16u\t%16X\n", cpu.esi, cpu.esi);
-		printf("edi\t%16u\t%16X\n", cpu.edi, cpu.edi);
-		printf("eip\t%16u\t%16X\n", cpu.eip, cpu.eip);
-		printf("eflags\t%16u\t%16X\n", cpu.eflags.val, cpu.eflags.val);
-		printf("AF\t%16u\t%16X\n", cpu.eflags.AF, cpu.eflags.AF);
-		printf("CF\t%16u\t%16X\n", cpu.eflags.CF, cpu.eflags.CF);
-		printf("DF\t%16u\t%16X\n", cpu.eflags.DF, cpu.eflags.DF);
-		printf("IF\t%16u\t%16X\n", cpu.eflags.IF, cpu.eflags.IF);
-		printf("OF\t%16u\t%16X\n", cpu.eflags.OF, cpu.eflags.OF);
-		printf("PF\t%16u\t%16X\n", cpu.eflags.PF, cpu.eflags.PF);
-		printf("NT\t%16u\t%16X\n", cpu.eflags.NT, cpu.eflags.NT);
+		printf("eax\t%-16u\t%-16X\n", cpu.eax, cpu.eax);
+		printf("ecx\t%-16u\t%-16X\n", cpu.ecx, cpu.ecx);
+		printf("edx\t%-16u\t%-16X\n", cpu.edx, cpu.edx);
+		printf("ebx\t%-16u\t%-16X\n", cpu.ebx, cpu.ebx);
+		printf("esp\t%-16u\t%-16X\n", cpu.esp, cpu.esp);
+		printf("ebp\t%-16u\t%-16X\n", cpu.ebp, cpu.ebp);
+		printf("esi\t%-16u\t%-16X\n", cpu.esi, cpu.esi);
+		printf("edi\t%-16u\t%-16X\n", cpu.edi, cpu.edi);
+		printf("eip\t%-16u\t%-16X\n", cpu.eip, cpu.eip);
+		printf("eflags\t%-16u\t%-16X\n", cpu.eflags.val, cpu.eflags.val);
+		printf("AF\t%-16u\t%-16X\n", cpu.eflags.AF, cpu.eflags.AF);
+		printf("CF\t%-16u\t%-16X\n", cpu.eflags.CF, cpu.eflags.CF);
+		printf("DF\t%-16u\t%-16X\n", cpu.eflags.DF, cpu.eflags.DF);
+		printf("IF\t%-16u\t%-16X\n", cpu.eflags.IF, cpu.eflags.IF);
+		printf("OF\t%-16u\t%-16X\n", cpu.eflags.OF, cpu.eflags.OF);
+		printf("PF\t%-16u\t%-16X\n", cpu.eflags.PF, cpu.eflags.PF);
+		printf("NT\t%-16u\t%-16X\n", cpu.eflags.NT, cpu.eflags.NT);
 	}
 	return 0;
 }
