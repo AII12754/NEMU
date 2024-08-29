@@ -97,8 +97,7 @@ static int cmd_x(char *args)
 	for (int i = 0; i < len; i++)
 	{
 		data = swaddr_read(addr, 4);
-		if (!(i % 4) && i)
-			printf("\n0X%08X: ", addr);
+		if (!(i % 4) && i) printf("\n0X%08X: ", addr);
 		printf("0X%08X ", data);
 		addr += 4;
 	}
