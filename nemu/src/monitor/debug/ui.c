@@ -62,23 +62,23 @@ static int cmd_info(char *args)
 	char *arg = strtok(args, " ");
 	if (*arg == 'r')
 	{
-		printf("%-16s%-16u%0#16X\n", "eax", cpu.eax, cpu.eax);
-		printf("%-16s%-16u%0#16X\n", "ecx", cpu.ecx, cpu.ecx);
-		printf("%-16s%-16u%0#16X\n", "edx", cpu.edx, cpu.edx);
-		printf("%-16s%-16u%0#16X\n", "ebx", cpu.ebx, cpu.ebx);
-		printf("%-16s%-16u%0#16X\n", "esp", cpu.esp, cpu.esp);
-		printf("%-16s%-16u%0#16X\n", "ebp", cpu.ebp, cpu.ebp);
-		printf("%-16s%-16u%0#16X\n", "esi", cpu.esi, cpu.esi);
-		printf("%-16s%-16u%0#16X\n", "edi", cpu.edi, cpu.edi);
-		printf("%-16s%-16u%0#16X\n", "eip", cpu.eip, cpu.eip);
-		printf("%-16s%-16u%0#16X\n", "eflags", cpu.eflags.val, cpu.eflags.val);
-		printf("%-16s%-16u%0#16X\n", "AF", cpu.eflags.AF, cpu.eflags.AF);
-		printf("%-16s%-16u%0#16X\n", "CF", cpu.eflags.CF, cpu.eflags.CF);
-		printf("%-16s%-16u%0#16X\n", "DF", cpu.eflags.DF, cpu.eflags.DF);
-		printf("%-16s%-16u%0#16X\n", "IF", cpu.eflags.IF, cpu.eflags.IF);
-		printf("%-16s%-16u%0#16X\n", "OF", cpu.eflags.OF, cpu.eflags.OF);
-		printf("%-16s%-16u%0#16X\n", "PF", cpu.eflags.PF, cpu.eflags.PF);
-		printf("%-16s%-16u%0#16X\n", "NT", cpu.eflags.NT, cpu.eflags.NT);
+		printf("%-16s%-16u%0#10X\n", "eax", cpu.eax, cpu.eax);
+		printf("%-16s%-16u%0#10X\n", "ecx", cpu.ecx, cpu.ecx);
+		printf("%-16s%-16u%0#10X\n", "edx", cpu.edx, cpu.edx);
+		printf("%-16s%-16u%0#10X\n", "ebx", cpu.ebx, cpu.ebx);
+		printf("%-16s%-16u%0#10X\n", "esp", cpu.esp, cpu.esp);
+		printf("%-16s%-16u%0#10X\n", "ebp", cpu.ebp, cpu.ebp);
+		printf("%-16s%-16u%0#10X\n", "esi", cpu.esi, cpu.esi);
+		printf("%-16s%-16u%0#10X\n", "edi", cpu.edi, cpu.edi);
+		printf("%-16s%-16u%0#10X\n", "eip", cpu.eip, cpu.eip);
+		printf("%-16s%-16u%0#10X\n", "eflags", cpu.eflags.val, cpu.eflags.val);
+		printf("%-16s%-16u%0#10X\n", "AF", cpu.eflags.AF, cpu.eflags.AF);
+		printf("%-16s%-16u%0#10X\n", "CF", cpu.eflags.CF, cpu.eflags.CF);
+		printf("%-16s%-16u%0#10X\n", "DF", cpu.eflags.DF, cpu.eflags.DF);
+		printf("%-16s%-16u%0#10X\n", "IF", cpu.eflags.IF, cpu.eflags.IF);
+		printf("%-16s%-16u%0#10X\n", "OF", cpu.eflags.OF, cpu.eflags.OF);
+		printf("%-16s%-16u%0#10X\n", "PF", cpu.eflags.PF, cpu.eflags.PF);
+		printf("%-16s%-16u%0#10X\n", "NT", cpu.eflags.NT, cpu.eflags.NT);
 	}
 	return 0;
 }
@@ -100,15 +100,16 @@ static int cmd_x(char *args)
 	uint32_t addr = (uint32_t)strtol(arg[1], NULL, 16);
 
 	uint32_t data;
-	printf("%0#8X: ", addr);
+	printf("%0#10X: ", addr);
 	for (int i = 0; i < len; i++)
 	{
 		data = swaddr_read(addr, 4);
 		if (!(i % 4) && i)
-			printf("\n%0#8X: ", addr);
-		printf("%0#8X ", data);
+			printf("\n%0#10X: ", addr);
+		printf("%0#10X ", data);
 		addr += 4;
 	}
+	printf("\n");
 
 	return 0;
 }
