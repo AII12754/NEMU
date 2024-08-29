@@ -48,7 +48,7 @@ static int cmd_si(char *args) {
 static int cmd_info(char *args) {
 	char *arg = strtok(args, " ");
 	if(*arg == 'r') {
-		printf("e%-16s%-16u%-#16X\n", "eax", cpu.eax, cpu.eax);
+		printf("%-16s%-16u%-#16X\n", "eax", cpu.eax, cpu.eax);
 		printf("%-16s%-16u%-#16X\n", "ecx", cpu.ecx, cpu.ecx);
 		printf("%-16s%-16u%-#16X\n", "edx", cpu.edx, cpu.edx);
 		printf("%-16s%-16u%-#16X\n", "ebx", cpu.ebx, cpu.ebx);
@@ -80,12 +80,15 @@ static int cmd_x(char *args) {
 	arg[0] = strtok(args, " ");
 	args += strlen(arg[0]) + 1;
 	arg[1] = strtok(args, " ");
-	//int len = atoi(arg[0]);
-	//long int addr = strtol(arg[1], NULL, 16);
+	int len = atoi(arg[0]);
+	uint32_t addr = (uint32_t)strtol(arg[1], NULL, 16);
 	
-
+	while(len--) {
+		uint32_t data = swaddr_read(addr, 4);
+		printf("%-16X%-16X\n", addr, data);
+		addr += 4;
+	}
 	
-
 	return 0;
 }
 
