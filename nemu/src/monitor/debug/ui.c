@@ -60,12 +60,11 @@ static int cmd_si(char *args)
 static int cmd_info(char *args)
 {
 	char *arg = strtok(args, " ");
-	char *gpr_name[8] = { "EAX", "ECX", "EDX", "EBX", "ESP", "EBP", "ESI", "EDI" };
 	if (*arg == 'r')
 	{
-		for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", gpr_name[i], reg_l(i), reg_l(i));
-		printf("%-16s%-16u0X%08X\n", "EIP", cpu.eip, cpu.eip);
-		//printf("%-16s%-16u0X%08X\n", "EFLAGS", cpu.eflags.val, cpu.eflags.val);
+		for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", regsl[i], reg_l(i), reg_l(i));
+		printf("%-16s%-16u0X%08X\n", "eip", cpu.eip, cpu.eip);
+		//printf("%-16s%-16u0X%08X\n", "eflags", cpu.eflags.val, cpu.eflags.val);
 		//printf("%-16s%-16u0X%08X\n", "AF", cpu.eflags.AF, cpu.eflags.AF);
 		//printf("%-16s%-16u0X%08X\n", "CF", cpu.eflags.CF, cpu.eflags.CF);
 		//printf("%-16s%-16u0X%08X\n", "DF", cpu.eflags.DF, cpu.eflags.DF);
