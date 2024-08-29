@@ -44,7 +44,7 @@ static int cmd_q(char *args)
 static int cmd_si(char *args)
 {
 	char *arg = strtok(args, " ");
-	int n;
+	uint32_t n;
 	if (arg == NULL)
 	{
 		n = 1;
