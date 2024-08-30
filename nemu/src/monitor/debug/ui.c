@@ -79,6 +79,10 @@ static int cmd_info(char *args)
 static int cmd_p(char *args)
 {
 	// TODO
+	bool legal_check = true;
+	uint32_t val = expr(args, &legal_check);
+	if(!legal_check) printf("illegal expression!");
+	else printf("%s = %u", args, val);
 	return 0;
 }
 

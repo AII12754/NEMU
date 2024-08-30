@@ -87,7 +87,7 @@ static bool make_token(char *e) {
 				 * of tokens, some extra actions should be performed.
 				 */
 
-				strncpy(tokens[nr_token].str , e, substr_len);
+				strncpy(tokens[nr_token].str , e, substr_len);	// DOUBT
 				tokens[nr_token++].type = rules[i].token_type;
 
 				switch(rules[i].token_type) {
@@ -107,14 +107,80 @@ static bool make_token(char *e) {
 	return true; 
 }
 
-uint32_t expr(char *e, bool *success) {
+bool check_parentheses(int p, int q) {
+	if(tokens[p].type == '(' && tokens[q].type == ')') return true;
+	else return false;
+}
+
+int find_dominant_op(int p, int q) {
+	int op_pos1 = 0, op_pos2 = 0, parentheses_count = 0;
+	for(int i = p; i <= q; i++) {
+		if(tokens[i].type == '(') parentheses_count++;
+		else if(tokens[i].type == ')') parentheses_count--;
+		if(parentheses_count) break;
+		else if(tokens[i].type == '+' || tokens[i].type == '-') op_pos1 = i;
+		else if(tokens[i].type == '*' || tokens[i].type == '/') op_pos2 = i;
+	}
+	return op_pos1 || op_pos2;
+}
+
+uint32_t eval(int p, int q, bool *legal_check) {
+	if(p > q) {
+		*legal_check = false;
+		return 0;
+	}
+	else if(p == q) {
+		uint32_t val = 0;
+		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
+		else if(tokens[p].type == HEX) val = sscanf(tokens[p].str, "%x", &val);
+		else {
+			*legal_check = false;
+			return 0;
+		}
+		return val;
+	}
+	else if(check_parentheses(p, q)) {
+		return eval(++p, --q, legal_check);
+	}
+	else {
+		int op_pos = find_dominant_op(p, q);
+		if(!op_pos) {
+			*legal_check = false;
+			return 0;
+		}
+		uint32_t val1 = eval(p, op_pos - 1, legal_check);
+		uint32_t val2 = eval(op_pos + 1, q, legal_check);
+
+		switch(tokens[op_pos].type) {
+			case '+':
+				return val1 + val2;
+				break;
+			case '-':
+				return val1 - val2;
+				break;
+			case '*':
+				return val1 * val2;
+				break;
+			case '/':
+				return val1 / val2;
+				break;
+			default:
+				*legal_check = false;
+				return 0;
+			}
+	}
+}
+
+uint32_t expr(char *e, bool *legal_check) {
 	if(!make_token(e)) {
-		*success = false;
+		*legal_check = false;
 		return 0;
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	panic("please implement me");
-	return 0;
+
+	uint32_t val = eval(0, nr_token - 1, legal_check);
+	//panic("please implement me");
+	return val;
 }
 
