@@ -139,9 +139,8 @@ int find_dominant_op(int p, int q) {
 				break;
 		}
 	}
-	return op_pos1 || op_pos2;
-	//if(!op_pos1) return op_pos2;
-	//else return op_pos1;
+	if(!op_pos1) return op_pos2;
+	else return op_pos1;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
