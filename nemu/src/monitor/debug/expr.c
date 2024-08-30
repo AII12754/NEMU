@@ -143,14 +143,14 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		}
 
 		//DEBUG
-		printf("check num: %u", val);
+		printf("check num at %d : %u\n", p, val);
 
 		return val;
 	}
 	else if(check_parentheses(p, q)) {
 
 		//DEBUG
-		printf("slim parentheses");
+		printf("slim parentheses\n");
 
 		return eval(p + 1, q - 1, legal_check);
 	}
@@ -158,7 +158,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
-		printf("dominant op at %d", op_pos);
+		printf("dominant op at %d\n", op_pos);
 
 		if(!op_pos) {
 			*legal_check = false;
