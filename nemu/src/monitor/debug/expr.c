@@ -23,7 +23,7 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},							// spaces
-	{"[0-9+]", NUM},							// numbers
+	{"[0-9]+", NUM},							// numbers
 	{"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", HEX},		// HEX numbers
 	//{"\\$"}
 	{"\\+", '+'},								// plus
