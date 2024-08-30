@@ -82,7 +82,7 @@ static int cmd_p(char *args)
 	bool legal_check = true;
 	uint32_t val = expr(args, &legal_check);
 	if(!legal_check) printf("illegal expression!");
-	else printf("%s = %u", args, val);
+	else printf("%s = %u\n", args, val);
 	return 0;
 }
 

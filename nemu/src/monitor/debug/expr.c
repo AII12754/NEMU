@@ -119,11 +119,13 @@ int find_dominant_op(int p, int q) {
 	for(int i = p; i <= q; i++) {
 		if(tokens[i].type == '(') parentheses_count++;
 		else if(tokens[i].type == ')') parentheses_count--;
-		if(parentheses_count) break;
+		else if(parentheses_count) break;
 		else if(tokens[i].type == '+' || tokens[i].type == '-') op_pos1 = i;
 		else if(tokens[i].type == '*' || tokens[i].type == '/') op_pos2 = i;
 	}
-	return op_pos1 || op_pos2;
+	//return op_pos1 || op_pos2;
+	if(!op_pos1) return op_pos2;
+	else return op_pos1;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
@@ -134,7 +136,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	else if(p == q) {
 		uint32_t val = 0;
 		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
-		else if(tokens[p].type == HEX) val = sscanf(tokens[p].str, "%x", &val);
+		else if(tokens[p].type == HEX) sscanf(tokens[p].str, "%x", &val);
 		else {
 			*legal_check = false;
 			return 0;
@@ -142,7 +144,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		return val;
 	}
 	else if(check_parentheses(p, q)) {
-		return eval(++p, --q, legal_check);
+		return eval(p + 1, q - 1, legal_check);
 	}
 	else {
 		int op_pos = find_dominant_op(p, q);
@@ -153,23 +155,20 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
 		uint32_t val2 = eval(op_pos + 1, q, legal_check);
 
+		if(!*legal_check) return 0;
 		switch(tokens[op_pos].type) {
 			case '+':
 				return val1 + val2;
-				break;
 			case '-':
 				return val1 - val2;
-				break;
 			case '*':
 				return val1 * val2;
-				break;
 			case '/':
 				return val1 / val2;
-				break;
 			default:
 				*legal_check = false;
 				return 0;
-			}
+		}
 	}
 }
 
