@@ -87,11 +87,13 @@ static bool make_token(char *e) {
 				 * of tokens, some extra actions should be performed.
 				 */
 
-				strncpy(tokens[nr_token].str , e, substr_len);	// DOUBT
-				tokens[nr_token++].type = rules[i].token_type;
-
 				switch(rules[i].token_type) {
-					default: panic("please implement me");
+					case NOTYPE:
+						break;
+					default: 
+						strncpy(tokens[nr_token].str , e, substr_len);	// DOUBT
+						tokens[nr_token++].type = rules[i].token_type;
+						//panic("please implement me");
 				}
 
 				break;
