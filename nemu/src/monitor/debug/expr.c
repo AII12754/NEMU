@@ -28,7 +28,7 @@ static struct rule {
 	//{"\\$"}
 	{"\\+", '+'},								// plus
 	{"==", EQ},									// equal
-	{"- +", '-'},								// subtract
+	{"-", '-'},								// subtract
 	{"\\*", '*'},								// multiply
 	{"/", '/'},									// devide
 	{"\\(", '('},								// left parenthese
@@ -141,13 +141,25 @@ uint32_t eval(int p, int q, bool *legal_check) {
 			*legal_check = false;
 			return 0;
 		}
+
+		//DEBUG
+		printf("check num: %u", val);
+
 		return val;
 	}
 	else if(check_parentheses(p, q)) {
+
+		//DEBUG
+		printf("slim parentheses");
+
 		return eval(p + 1, q - 1, legal_check);
 	}
 	else {
 		int op_pos = find_dominant_op(p, q);
+
+		//DEBUG
+		printf("dominant op at %d", op_pos);
+
 		if(!op_pos) {
 			*legal_check = false;
 			return 0;
