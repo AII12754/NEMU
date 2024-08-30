@@ -122,15 +122,26 @@ bool check_parentheses(int p, int q) {
 int find_dominant_op(int p, int q) {
 	int op_pos1 = 0, op_pos2 = 0, parentheses_count = 0;
 	for(int i = p; i <= q; i++) {
-		if(tokens[i].type == '(') parentheses_count++;
-		else if(tokens[i].type == ')') parentheses_count--;
-		else if(parentheses_count) break;
-		else if(tokens[i].type == '+' || tokens[i].type == '-') op_pos1 = i;
-		else if(tokens[i].type == '*' || tokens[i].type == '/') op_pos2 = i;
+		switch(tokens[i].type) {
+			case '(': 
+				parentheses_count++;
+				break;
+			case ')': 
+				parentheses_count--;
+				break;
+			case '+': 
+			case '-':
+				if(!parentheses_count) op_pos1 = i;
+				break;
+			case '*':
+			case '/':
+				if(!parentheses_count) op_pos2 = i;
+				break;
+		}
 	}
-	//return op_pos1 || op_pos2;
-	if(!op_pos1) return op_pos2;
-	else return op_pos1;
+	return op_pos1 || op_pos2;
+	//if(!op_pos1) return op_pos2;
+	//else return op_pos1;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
