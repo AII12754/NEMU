@@ -91,10 +91,10 @@ static bool make_token(char *e) {
 					case NOTYPE:
 						break;
 					default: 
-						for(int i = 0; i < substr_len; i++) tokens[nr_token].str[i] = *(e + position + i);
+						//for(int i = 0; i < substr_len; i++) tokens[nr_token].str[i] = *(e + position + i);
+						strncpy(tokens[nr_token].str , e + position, substr_len);	// DOUBT
 						tokens[nr_token].str[substr_len] = '\0';
-						//strncpy(tokens[nr_token].str , e + position, substr_len);	// DOUBT
-						//tokens[nr_token].type = rules[i].token_type;
+						tokens[nr_token].type = rules[i].token_type;
 						nr_token++;
 						//panic("please implement me");
 				}
