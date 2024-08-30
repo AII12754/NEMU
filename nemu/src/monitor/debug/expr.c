@@ -192,7 +192,7 @@ uint32_t expr(char *e, bool *legal_check) {
 		*legal_check = false;
 		return 0;
 	}
-	for(int i = 0; i < nr_token; i++) printf("%s ", tokens[i].str);
+	for(int i = 0; i < nr_token; i++) printf("%s", tokens[i].str);
 	printf("\n");
 
 	/* TODO: Insert codes to evaluate the expression. */
