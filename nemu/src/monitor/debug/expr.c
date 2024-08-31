@@ -191,15 +191,15 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				}
 				else if(strcmp(tokens[p].str + 1, regsl[i])) {
 					val = reg_l(i);
-					return val;
+					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsw[i])) {
 					val = reg_w(i);
-					return val;
+					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsb[i])) {
 					val = reg_b(i);
-					return val;
+					break;
 				}
 			}
 		}
