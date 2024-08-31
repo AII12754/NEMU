@@ -29,7 +29,7 @@ static struct rule {
 	{"\\$[a-zA-Z]+", REG},						// registers
 
 	{"&&", AND},									// and
-	{"||", OR},										// or
+	{"\\|\\|", OR},										// or
 	{"==", EQ},										// equal
 	{"!=", NEQ},									// not equal
 	{"!", NOT},										// not
