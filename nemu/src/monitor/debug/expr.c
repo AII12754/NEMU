@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM, HEX
+	NOTYPE = 256, EQ, NUM, HEX, NEG, DEREF, REF, AND, OR, NOT, NEQ, REG
 
 	/* TODO: Add more token types */
 
@@ -25,10 +25,17 @@ static struct rule {
 	{" +",	NOTYPE},							// spaces
 	{"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", HEX},		// HEX numbers
 	{"[0-9]+", NUM},							// numbers
-	//{"\\$"}
+	{"\\$[a-zA-Z]+", REG},							// registers
+	{"&&", AND},									// and
+	{"||", OR},										// or
+	{"==", EQ},										// equal
+	{"!=", NEQ},									// not equal
+	{"!", NOT},										// not
+	{"&", REF},										// reference
+	//{"\\*\\B", DEREF},							// dereference
 	{"\\+", '+'},								// plus
-	{"==", EQ},									// equal
-	{"-", '-'},								// subtract
+	{"-", '-'},									// subtract
+	//{"\\< -\\B", NEG},							// NEG
 	{"\\*", '*'},								// multiply
 	{"/", '/'},									// devide
 	{"\\(", '('},								// left parenthese
@@ -114,7 +121,20 @@ static bool make_token(char *e) {
 	return true; 
 }
 
-bool check_parentheses(int p, int q) {
+bool check_parentheses(int p, int q, bool *legal_check) {
+	int parentheses_count = 0;
+	for(int i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
+		if(parentheses_count < 0) *legal_check = false;
+		switch(tokens[i].type) {
+			case '(': 
+				parentheses_count++;
+				break;
+			case ')': 
+				parentheses_count--;
+				break;
+		}
+	}
+	if(parentheses_count) *legal_check = false;
 	if(tokens[p].type == '(' && tokens[q].type == ')') return true;
 	else return false;
 }
@@ -144,7 +164,7 @@ int find_dominant_op(int p, int q) {
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
-	if(p > q) {
+	if(*legal_check && p > q) {
 		*legal_check = false;
 		return 0;
 	}
@@ -162,23 +182,20 @@ uint32_t eval(int p, int q, bool *legal_check) {
 
 		return val;
 	}
-	else if(check_parentheses(p, q)) {
+	else if(check_parentheses(p, q, legal_check)) {
 
 		//DEBUG
 		printf("slim parentheses\n");
 
 		return eval(p + 1, q - 1, legal_check);
 	}
-	else {
+	else if(*legal_check) {
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
 		printf("dominant op at %d\n", op_pos);
 
-		if(!op_pos) {
-			*legal_check = false;
-			return 0;
-		}
+		if(!op_pos) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
 		uint32_t val2 = eval(op_pos + 1, q, legal_check);
 
@@ -204,6 +221,20 @@ uint32_t expr(char *e, bool *legal_check) {
 		*legal_check = false;
 		return 0;
 	}
+
+	// recognize dereference and negative
+	for(int i = 0; i < nr_token - 1; i++) {
+		if(tokens[i].type == '*' && !(i || tokens[i - 1].type == NUM 
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX)) {
+			tokens[i].type = DEREF;
+		}
+		if(tokens[i].type == '-' && !(i || tokens[i - 1].type == NUM 
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX)) {
+			tokens[i].type = NEG;
+		}
+	}
+
+	//DEBUG
 	for(int i = 0; i < nr_token; i++) printf("%s", tokens[i].str);
 	printf("\n");
 
