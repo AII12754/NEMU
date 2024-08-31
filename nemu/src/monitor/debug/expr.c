@@ -23,9 +23,11 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},							// spaces
+
 	{"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", HEX},		// HEX numbers
 	{"[0-9]+", NUM},							// numbers
-	{"\\$[a-zA-Z]+", REG},							// registers
+	{"\\$[a-zA-Z]+", REG},						// registers
+
 	{"&&", AND},									// and
 	{"||", OR},										// or
 	{"==", EQ},										// equal
@@ -140,7 +142,7 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
-	int op_pos1 = 0, op_pos2 = 0, parentheses_count = 0;
+	int op_pos[4] = {0}, parentheses_count = 0;
 	for(int i = p; i <= q; i++) {
 		switch(tokens[i].type) {
 			case '(': 
@@ -149,18 +151,27 @@ int find_dominant_op(int p, int q) {
 			case ')': 
 				parentheses_count--;
 				break;
+			case EQ:
+			case NEQ:
+				if(!parentheses_count) op_pos[0] = i;
+				break;
+			case AND:
+			case OR:
+				if(!parentheses_count) op_pos[1] = i;
+				break;
 			case '+': 
 			case '-':
-				if(!parentheses_count) op_pos1 = i;
+				if(!parentheses_count) op_pos[2] = i;
 				break;
 			case '*':
 			case '/':
-				if(!parentheses_count) op_pos2 = i;
+				if(!parentheses_count) op_pos[3] = i;
 				break;
 		}
 	}
-	if(!op_pos1) return op_pos2;
-	else return op_pos1;
+
+	for(int i = 0; i < 4; i++) if(op_pos[i]) return op_pos[i];
+	return 0;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
@@ -172,6 +183,17 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		uint32_t val = 0;
 		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
 		else if(tokens[p].type == HEX) sscanf(tokens[p].str, "%x", &val);
+		else if(tokens[p].type == REG) {
+			for(int i = 0; i <= 8; i++) {
+				if(i == 8) {
+					*legal_check = false;
+					return 0;
+				}
+				else if(tokens[p].str == regsl[i]) val = reg_l(i);
+				else if(tokens[p].str == regsw[i]) val = reg_w(i);
+				else if(tokens[p].str == regsb[i]) val = reg_b(i);
+			}
+		}
 		else {
 			*legal_check = false;
 			return 0;
@@ -190,6 +212,25 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		return eval(p + 1, q - 1, legal_check);
 	}
 	else if(*legal_check) {
+		//单目运算符处理
+		if(p + 1 == q) {
+			uint32_t val = 0;
+			swaddr_t addr = 0;
+			switch (tokens[p].type)
+			{
+			case NOT:
+				val = eval(q, q, legal_check);
+				return !val;
+			case REF:
+				addr = (swaddr_t)eval(q, q, legal_check);
+				val = swaddr_read(addr, 4);
+				return val;
+			case NEG:
+				// TODO: implement the NEG operator
+				break;
+			}
+		}
+
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
@@ -214,6 +255,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return 0;
 		}
 	}
+	return 0;
 }
 
 uint32_t expr(char *e, bool *legal_check) {
@@ -224,12 +266,12 @@ uint32_t expr(char *e, bool *legal_check) {
 
 	// recognize dereference and negative
 	for(int i = 0; i < nr_token - 1; i++) {
-		if(tokens[i].type == '*' && !(i || tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX)) {
+		if(tokens[i].type == '*' && (!i || !(tokens[i - 1].type == NUM 
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX))) {
 			tokens[i].type = DEREF;
 		}
-		if(tokens[i].type == '-' && !(i || tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX)) {
+		if(tokens[i].type == '-' && (!i || !(tokens[i - 1].type == NUM 
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX))) {
 			tokens[i].type = NEG;
 		}
 	}
