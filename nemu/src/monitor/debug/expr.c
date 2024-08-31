@@ -209,14 +209,14 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		}
 
 		//DEBUG
-		Log("check num at %d : %u\n", p, val);
+		Log("check num at %d : %u", p, val);
 
 		return val;
 	}
 	else if(check_parentheses(p, q, legal_check)) {
 
 		//DEBUG
-		Log("slim parentheses\n");
+		Log("slim parentheses");
 
 		return eval(p + 1, q - 1, legal_check);
 	}
@@ -243,7 +243,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
-		Log("dominant op at %d\n", op_pos);
+		Log("dominant op at %d", op_pos);
 
 		if(!op_pos) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
@@ -286,8 +286,7 @@ uint32_t expr(char *e, bool *legal_check) {
 	}
 
 	//DEBUG
-	for(int i = 0; i < nr_token; i++) printf("%s", tokens[i].str);
-	Log("\n");
+	for(int i = 0; i < nr_token; i++) Log("%s", tokens[i].str);
 
 	/* TODO: Insert codes to evaluate the expression. */
 
