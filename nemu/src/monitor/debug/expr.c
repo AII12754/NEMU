@@ -189,9 +189,9 @@ uint32_t eval(int p, int q, bool *legal_check) {
 					*legal_check = false;
 					return 0;
 				}
-				else if(tokens[p].str == regsl[i]) val = reg_l(i);
-				else if(tokens[p].str == regsw[i]) val = reg_w(i);
-				else if(tokens[p].str == regsb[i]) val = reg_b(i);
+				else if(tokens[p].str + 1 == regsl[i]) val = reg_l(i);
+				else if(tokens[p].str + 1 == regsw[i]) val = reg_w(i);
+				else if(tokens[p].str + 1 == regsb[i]) val = reg_b(i);
 			}
 		}
 		else {
