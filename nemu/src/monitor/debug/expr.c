@@ -292,11 +292,13 @@ uint32_t expr(char *e, bool *legal_check) {
 	// recognize dereference and negative
 	for(int i = 0; i < nr_token - 1; i++) {
 		if(tokens[i].type == '*' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX))) {
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
+		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
 			tokens[i].type = DEREF;
 		}
 		if(tokens[i].type == '-' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX))) {
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
+		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
 			tokens[i].type = NEG;
 		}
 	}
