@@ -34,10 +34,8 @@ static struct rule {
 	{"!=", NEQ},									// not equal
 	{"!", NOT},										// not
 	{"&", REF},										// reference
-	{"\\*", DEREF},									// dereference
 	{"\\+", '+'},								// plus
 	{"-", '-'},									// subtract
-	//{"\\< -\\B", NEG},							// NEG
 	{"\\*", '*'},								// multiply
 	{"/", '/'},									// devide
 	{"\\(", '('},								// left parenthese
