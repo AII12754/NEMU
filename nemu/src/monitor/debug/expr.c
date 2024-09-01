@@ -251,7 +251,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				val = swaddr_read(addr, 4);
 				return val;
 			case NEG:
-				// TODO: implement the NEG operator
+				// TODO: 目前实现有溢出风险
 				val = eval(p + 1, q, legal_check);
 				return -val;
 			}
