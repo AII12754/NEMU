@@ -32,8 +32,8 @@ static struct rule {
 	{"\\|\\|", OR},								// or
 	{"==", EQ},									// equal
 	{"!=", NEQ},								// not equal
-	{"!", NOT},										// not
-	{"&", REF},										// reference
+	{"!", NOT},									// not
+	//{"&", REF},										// reference
 	{"\\+", '+'},								// plus
 	{"-", '-'},									// subtract
 	{"\\*", '*'},								// multiply
@@ -252,7 +252,8 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return val;
 			case NEG:
 				// TODO: implement the NEG operator
-				break;
+				val = eval(p + 1, q, legal_check);
+				return -val;
 			}
 		}
 
