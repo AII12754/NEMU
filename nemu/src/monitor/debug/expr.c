@@ -34,7 +34,7 @@ static struct rule {
 	{"!=", NEQ},									// not equal
 	{"!", NOT},										// not
 	{"&", REF},										// reference
-	{"\\*\\B", DEREF},								// dereference
+	{"\\*", DEREF},									// dereference
 	{"\\+", '+'},								// plus
 	{"-", '-'},									// subtract
 	//{"\\< -\\B", NEG},							// NEG
