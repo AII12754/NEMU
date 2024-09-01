@@ -136,9 +136,13 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 		}
 		if(i != q && !parentheses_count) whole_included = false; 
 	}
-	if(parentheses_count) *legal_check = false;
-	if(whole_included) return true;
-	else return false;
+	if(parentheses_count) {
+		*legal_check = false;
+		whole_included = false;
+	}
+	//if(whole_included && tokens[p].type == '(' && tokens[q].type == ')') return true;
+	//else return false;
+	return whole_included;
 }
 
 int find_dominant_op(int p, int q) {
