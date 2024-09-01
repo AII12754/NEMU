@@ -192,16 +192,19 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				else if(strcmp(tokens[p].str + 1, regsl[i])) {
 					//sscanf(reg_l(i), "%u", &val);
 					val = reg_l(i);
+					Log("register l %d = %u", i, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsw[i])) {
 					//sscanf((uint32_t)reg_w(i), "%u", &val);
 					val = reg_w(i);
+					Log("register w %d = %u", i, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsb[i])) {
 					//sscanf((uint32_t)reg_b(i), "%u", &val);
 					val = reg_b(i);
+					Log("register b %d = %u", i, val);
 					break;
 				}
 			}
