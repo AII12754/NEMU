@@ -188,7 +188,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				val = cpu.eip;
 				Log("register $eip = %u", val);
 			}
-			for(int i = 0; i <= 8; i++) {
+			else for(int i = 0; i <= 8; i++) {
 				if(i == 8) {
 					*legal_check = false;
 					return 0;
