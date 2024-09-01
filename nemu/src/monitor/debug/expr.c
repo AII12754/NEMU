@@ -123,6 +123,7 @@ static bool make_token(char *e) {
 
 bool check_parentheses(int p, int q, bool *legal_check) {
 	int parentheses_count = 0;
+	bool whole_included = true;
 	for(int i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
 		if(parentheses_count < 0) *legal_check = false;
 		switch(tokens[i].type) {
@@ -133,9 +134,10 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 				parentheses_count--;
 				break;
 		}
+		if(i != q && !parentheses_count) whole_included = false; 
 	}
 	if(parentheses_count) *legal_check = false;
-	if(tokens[p].type == '(' && tokens[q].type == ')') return true;
+	if(whole_included) return true;
 	else return false;
 }
 
