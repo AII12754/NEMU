@@ -24,7 +24,7 @@ static struct rule {
 
 	{" +",	NOTYPE},							// spaces
 
-	{"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", HEX},		// HEX numbers
+	{"0[xX][0-9a-fA-F]+", HEX},					// HEX numbers
 	{"[0-9]+", NUM},							// numbers
 	{"\\$[a-zA-Z]+", REG},						// registers
 
@@ -34,7 +34,7 @@ static struct rule {
 	{"!=", NEQ},									// not equal
 	{"!", NOT},										// not
 	{"&", REF},										// reference
-	//{"\\*\\B", DEREF},							// dereference
+	{"\\*\\B", DEREF},								// dereference
 	{"\\+", '+'},								// plus
 	{"-", '-'},									// subtract
 	//{"\\< -\\B", NEG},							// NEG
@@ -190,14 +190,17 @@ uint32_t eval(int p, int q, bool *legal_check) {
 					return 0;
 				}
 				else if(strcmp(tokens[p].str + 1, regsl[i])) {
+					//sscanf(reg_l(i), "%u", &val);
 					val = reg_l(i);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsw[i])) {
+					//sscanf((uint32_t)reg_w(i), "%u", &val);
 					val = reg_w(i);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsb[i])) {
+					//sscanf((uint32_t)reg_b(i), "%u", &val);
 					val = reg_b(i);
 					break;
 				}
@@ -231,6 +234,8 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				val = eval(q, q, legal_check);
 				return !val;
 			case REF:
+				// TODO: implement the REF operator
+			case DEREF:
 				addr = (swaddr_t)eval(q, q, legal_check);
 				val = swaddr_read(addr, 4);
 				return val;
