@@ -62,8 +62,6 @@ bool check_wp() {
 	bool changed = false;
 	Log("1");
 	while(pre != NULL) {
-		Log("1");
-		pre = pre->next;
 		Log("11");
 		bool legal_check = true;
 		Log("11");
@@ -77,6 +75,7 @@ bool check_wp() {
 			pre->val = val;
 			changed = true;
 		}
+		pre = pre->next;
 		Log("11");
 	}
 	Log("1");
