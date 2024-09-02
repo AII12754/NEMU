@@ -65,7 +65,7 @@ bool check_wp() {
 		Log("11");
 		bool legal_check = true;
 		Log("11");
-		int val = expr(pre->str, &legal_check);
+		uint32_t val = expr(pre->str, &legal_check);
 		Log("11");
 		if(val != pre->val) {
 			Log("11");
