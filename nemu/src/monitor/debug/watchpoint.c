@@ -28,6 +28,7 @@ WP* new_wp(char *str, bool *legal_check) {
 	free_ = free_->next;
 	
 	head->str = str;
+	strcat(head->str, "\0");
 	head->val = expr(str, legal_check);
 
 	return head;
@@ -71,7 +72,7 @@ bool check_wp() {
 			Log("11");
 			printf("Hint watchpoint %d at address 0x%08x, expr = %s\n", pre->NO, cpu.eip, pre->str);
 			printf("old value = %08x\n", pre->val);
-			printf("old value = %08x\n", val);
+			printf("new value = %08x\n", val);
 			pre->val = val;
 			changed = true;
 		}
