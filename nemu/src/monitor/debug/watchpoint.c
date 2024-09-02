@@ -55,9 +55,13 @@ WP* find_wp(int n) {
 
 bool check_wp() {
 	if(first_check) return false;
+	Log("1");
 	WP *pre = head;
+	Log("1");
 	bool changed = false;
+	Log("1");
 	while(pre->next != NULL) {
+		Log("1");
 		pre = pre->next;
 		bool legal_check = true;
 		int val = expr(pre->str, &legal_check);
@@ -69,6 +73,7 @@ bool check_wp() {
 			changed = true;
 		}
 	}
+	Log("1");
 	return changed;
 }
 
