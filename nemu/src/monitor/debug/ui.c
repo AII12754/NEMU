@@ -60,18 +60,17 @@ static int cmd_si(char *args)
 static int cmd_info(char *args)
 {
 	char *arg = strtok(args, " ");
-	if (*arg == 'r')
-	{
-		for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", regsl[i], reg_l(i), reg_l(i));
-		printf("%-16s%-16u0X%08X\n", "eip", cpu.eip, cpu.eip);
-		//printf("%-16s%-16u0X%08X\n", "eflags", cpu.eflags.val, cpu.eflags.val);
-		//printf("%-16s%-16u0X%08X\n", "AF", cpu.eflags.AF, cpu.eflags.AF);
-		//printf("%-16s%-16u0X%08X\n", "CF", cpu.eflags.CF, cpu.eflags.CF);
-		//printf("%-16s%-16u0X%08X\n", "DF", cpu.eflags.DF, cpu.eflags.DF);
-		//printf("%-16s%-16u0X%08X\n", "IF", cpu.eflags.IF, cpu.eflags.IF);
-		//printf("%-16s%-16u0X%08X\n", "OF", cpu.eflags.OF, cpu.eflags.OF);
-		//printf("%-16s%-16u0X%08X\n", "PF", cpu.eflags.PF, cpu.eflags.PF);
-		//printf("%-16s%-16u0X%08X\n", "NT", cpu.eflags.NT, cpu.eflags.NT);
+
+	switch(*arg) {
+		case 'r':
+			for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", regsl[i], reg_l(i), reg_l(i));
+			printf("%-16s%-16u0X%08X\n", "eip", cpu.eip, cpu.eip);
+			break;
+		case 'w':
+			info_wp();
+			break;
+		default:
+			printf("illegal parameter");
 	}
 	return 0;
 }
@@ -110,13 +109,22 @@ static int cmd_x(char *args)
 
 static int cmd_w(char *args)
 {
-	// TODO
+	bool legal_check = true;
+	WP *wp = new_wp(args, &legal_check);
+	if(legal_check) printf("Set watchpoint #%d", wp->NO);
+	else {
+		free_wp(wp->NO);
+		printf("illegal expression!");
+	}
 	return 0;
 }
 
 static int cmd_d(char *args)
 {
-	// TODO
+	char *arg = strtok(args, " ");
+	int n;
+	n = atoi(arg);
+	free_wp(n);
 	return 0;
 }
 
