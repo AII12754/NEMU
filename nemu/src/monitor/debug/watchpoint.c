@@ -78,12 +78,17 @@ bool check_wp() {
 }
 
 void info_wp() {
+	Log("1");
 	printf("NO        Address        Enable\n");
+	Log("1");
 	WP *pre = head;
+	Log("1");
 	while(pre->next != NULL) {
+		Log("3");
 		pre = pre->next;
 		printf("%-2d        %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
 	}
+	Log("1");
 	return;
 }
 

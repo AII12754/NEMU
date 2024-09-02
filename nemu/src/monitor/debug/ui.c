@@ -67,6 +67,7 @@ static int cmd_info(char *args)
 			printf("%-16s%-16u0X%08X\n", "eip", cpu.eip, cpu.eip);
 			break;
 		case 'w':
+			Log("2");
 			info_wp();
 			break;
 		default:
