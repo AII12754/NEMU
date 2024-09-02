@@ -23,7 +23,7 @@ void init_wp_pool() {
 }
 
 WP* new_wp(char *str, bool *legal_check) {
-	if(first_check) {
+	if(first_check == true) {
 		init_wp_pool();
 		first_check = false;
 	}
@@ -62,7 +62,7 @@ WP* find_wp(int n) {
 }
 
 bool check_wp() {
-	if(first_check) {
+	if(first_check == true) {
 		init_wp_pool();
 		first_check = false;
 	}
@@ -89,7 +89,7 @@ bool check_wp() {
 }
 
 void info_wp() {
-	if(first_check) {
+	if(first_check == true) {
 		init_wp_pool();
 		first_check = false;
 		return;
