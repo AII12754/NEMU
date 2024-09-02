@@ -55,6 +55,7 @@ WP* find_wp(int n) {
 
 bool check_wp() {
 	if(first_check) return false;
+	if(first_check) Log("2");;
 	Log("1");
 	WP *pre = head;
 	Log("1");
