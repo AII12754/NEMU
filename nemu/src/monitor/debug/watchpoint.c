@@ -7,7 +7,7 @@
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
-bool first_check = true;
+static int first_check = 1;
 
 void init_wp_pool() {
 	int i;
@@ -19,13 +19,13 @@ void init_wp_pool() {
 
 	head = NULL;
 	free_ = wp_pool;
-	first_check = false;
+	first_check = 0;
 }
 
 WP* new_wp(char *str, bool *legal_check) {
-	if(first_check == true) {
+	if(first_check) {
 		init_wp_pool();
-		first_check = false;
+		first_check = 0;
 	}
 	Assert(free_ != NULL, "No empty watchpoint");
 	WP *tmp = head;
@@ -62,9 +62,9 @@ WP* find_wp(int n) {
 }
 
 bool check_wp() {
-	if(first_check == true) {
+	if(first_check) {
 		init_wp_pool();
-		first_check = false;
+		first_check = 0;
 	}
 	Log("1");
 	WP *pre = head;
@@ -89,9 +89,9 @@ bool check_wp() {
 }
 
 void info_wp() {
-	if(first_check == true) {
+	if(first_check) {
 		init_wp_pool();
-		first_check = false;
+		first_check = 0;
 		return;
 	}
 	Log("1");
