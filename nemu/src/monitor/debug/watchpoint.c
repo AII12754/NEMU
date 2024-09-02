@@ -7,7 +7,6 @@
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
-int first_check = 1;
 
 void init_wp_pool() {
 	int i;
@@ -19,14 +18,9 @@ void init_wp_pool() {
 
 	head = NULL;
 	free_ = wp_pool;
-	first_check = 0;
 }
 
 WP* new_wp(char *str, bool *legal_check) {
-	if(first_check) {
-		init_wp_pool();
-		first_check = 0;
-	}
 	Assert(free_ != NULL, "No empty watchpoint");
 	WP *tmp = head;
 	head =  free_;
@@ -36,7 +30,7 @@ WP* new_wp(char *str, bool *legal_check) {
 	head->str = str;
 	head->val = expr(str, legal_check);
 
-	return head->next;
+	return head;
 }
 
 void free_wp(int n) {
@@ -62,10 +56,6 @@ WP* find_wp(int n) {
 }
 
 bool check_wp() {
-	if(first_check) {
-		init_wp_pool();
-		first_check = 0;
-	}
 	Log("1");
 	WP *pre = head;
 	Log("1");
@@ -89,11 +79,6 @@ bool check_wp() {
 }
 
 void info_wp() {
-	if(first_check) {
-		init_wp_pool();
-		first_check = 0;
-		return;
-	}
 	Log("1");
 	printf("NO        Address        Enable\n");
 	Log("1");
