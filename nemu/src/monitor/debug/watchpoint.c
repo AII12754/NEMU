@@ -7,7 +7,7 @@
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
 
-static bool first_check = true;
+bool first_check = true;
 
 void init_wp_pool() {
 	int i;
