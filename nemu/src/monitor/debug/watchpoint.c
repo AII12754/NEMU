@@ -92,6 +92,7 @@ void info_wp() {
 	if(first_check) {
 		init_wp_pool();
 		first_check = false;
+		return;
 	}
 	Log("1");
 	printf("NO        Address        Enable\n");
