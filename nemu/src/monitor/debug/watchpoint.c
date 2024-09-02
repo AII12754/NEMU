@@ -27,6 +27,7 @@ WP* new_wp(char *str, bool *legal_check) {
 	head->next = tmp;
 	free_ = free_->next;
 	
+	head->str = "\0";
 	strcpy(head->str, str);
 	strcat(head->str, "\0");
 	head->val = expr(str, legal_check);
