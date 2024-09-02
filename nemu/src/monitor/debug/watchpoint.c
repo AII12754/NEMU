@@ -27,26 +27,31 @@ WP* new_wp(char *str, bool *legal_check) {
 		init_wp_pool();
 		first_check = false;
 	}
-	Assert(free_->next != NULL, "No empty watchpoint");
-	WP *tmp = head->next;
-	head->next =  free_->next;
-	head->next->next = tmp;
-	free_->next = free_->next->next;
+	Assert(free_ != NULL, "No empty watchpoint");
+	WP *tmp = head;
+	head =  free_;
+	head->next = tmp;
+	free_ = free_->next;
 	
-	head->next->str = str;
-	head->next->val = expr(str, legal_check);
+	head->str = str;
+	head->val = expr(str, legal_check);
 
 	return head->next;
 }
 
 void free_wp(int n) {
-	if(n > NR_WP || n < 0) printf("Watchpoint #%d does not exist", n);
+	if(n >= NR_WP || n < 0) printf("Watchpoint #%d does not exist", n);
 	WP *wp = find_wp(n);
-	WP *pre = head, *tmp = free_->next;
-	while(pre->next != NULL && pre->next != wp) pre = pre->next;
-	if(pre->next != NULL) printf("Watchpoint #%d does not exist", n);
-	free_->next = pre->next;
-	free_->next->next = tmp;
+	WP *pre = head, *tmp = free_;
+	if(pre == wp) {
+		head = head->next;
+		free_ = pre;
+		free_->next = tmp;
+	}
+	while(pre != NULL && pre->next != wp) pre = pre->next;
+	if(pre == NULL) printf("Watchpoint #%d does not exist", n);
+	free_ = pre->next;
+	free_->next = tmp;
 	pre->next = pre->next->next;
 	return;
 }
@@ -66,7 +71,7 @@ bool check_wp() {
 	Log("1");
 	bool changed = false;
 	Log("1");
-	while(pre->next != NULL) {
+	while(pre != NULL) {
 		Log("1");
 		pre = pre->next;
 		bool legal_check = true;
@@ -93,7 +98,7 @@ void info_wp() {
 	Log("1");
 	WP *pre = head;
 	Log("1");
-	while(pre->next != NULL) {
+	while(pre != NULL) {
 		Log("3");
 		pre = pre->next;
 		printf("%-2d        %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
