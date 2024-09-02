@@ -34,7 +34,7 @@ WP* new_wp(char *str, bool *legal_check) {
 }
 
 void free_wp(int n) {
-	if(n >= NR_WP || n < 0) printf("Watchpoint #%d does not exist", n);
+	if(n >= NR_WP || n < 0) printf("Watchpoint #%d does not exist\n", n);
 	WP *wp = find_wp(n);
 	WP *pre = head, *tmp = free_;
 	if(pre == wp) {
@@ -43,7 +43,7 @@ void free_wp(int n) {
 		free_->next = tmp;
 	}
 	while(pre != NULL && pre->next != wp) pre = pre->next;
-	if(pre == NULL) printf("Watchpoint #%d does not exist", n);
+	if(pre == NULL) printf("Watchpoint #%d does not exist\n", n);
 	free_ = pre->next;
 	free_->next = tmp;
 	pre->next = pre->next->next;
