@@ -64,15 +64,20 @@ bool check_wp() {
 	while(pre != NULL) {
 		Log("1");
 		pre = pre->next;
+		Log("11");
 		bool legal_check = true;
+		Log("11");
 		int val = expr(pre->str, &legal_check);
+		Log("11");
 		if(val != pre->val) {
+			Log("11");
 			printf("Hint watchpoint %d at address 0x%08x, expr = %s\n", pre->NO, cpu.eip, pre->str);
 			printf("old value = %08x\n", pre->val);
 			printf("old value = %08x\n", val);
 			pre->val = val;
 			changed = true;
 		}
+		Log("11");
 	}
 	Log("1");
 	return changed;

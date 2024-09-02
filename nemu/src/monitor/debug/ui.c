@@ -112,10 +112,10 @@ static int cmd_w(char *args)
 {
 	bool legal_check = true;
 	WP *wp = new_wp(args, &legal_check);
-	if(legal_check) printf("Set watchpoint #%d", wp->NO);
+	if(legal_check) printf("Set watchpoint #%d\n", wp->NO);
 	else {
 		free_wp(wp->NO);
-		printf("illegal expression!");
+		printf("illegal expression!\n");
 	}
 	return 0;
 }
