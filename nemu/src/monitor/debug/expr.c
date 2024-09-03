@@ -243,6 +243,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	else if(*legal_check) {
 		//单目运算符处理
 		if(p + 1 == q) {
+			Log("ENTER");
 			uint32_t val = 0;
 			swaddr_t addr = 0;
 			switch (tokens[p].type)
