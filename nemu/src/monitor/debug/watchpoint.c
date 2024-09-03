@@ -92,8 +92,8 @@ void info_wp() {
 	Log("1");
 	while(pre != NULL) {
 		Log("3");
-		pre = pre->next;
 		printf("%-2d        %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
+		pre = pre->next;
 	}
 	Log("1");
 	return;
