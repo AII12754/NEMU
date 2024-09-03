@@ -54,8 +54,9 @@ void free_wp(int n) {
 		while(pre != NULL && pre->next != wp) pre = pre->next;
 		if(pre == NULL) printf("Watchpoint #%d does not exist\n", n);
 		else {
+			WP *next = free_;
 			free_ = pre->next;
-			free_->next = tmp;
+			free_->next = next;
 			pre->next = pre->next->next;
 		}
 	}
