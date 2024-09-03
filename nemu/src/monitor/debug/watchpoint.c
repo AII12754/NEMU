@@ -49,13 +49,16 @@ void free_wp(int n) {
 		Log("1");
 		free_->next = tmp;
 		Log("1");
-		return;
 	}
-	while(pre != NULL && pre->next != wp) pre = pre->next;
-	if(pre == NULL) printf("Watchpoint #%d does not exist\n", n);
-	free_ = pre->next;
-	free_->next = tmp;
-	pre->next = pre->next->next;
+	else {
+		while(pre != NULL && pre->next != wp) pre = pre->next;
+		if(pre == NULL) printf("Watchpoint #%d does not exist\n", n);
+		else {
+			free_ = pre->next;
+			free_->next = tmp;
+			pre->next = pre->next->next;
+		}
+	}
 	return;
 }
 
