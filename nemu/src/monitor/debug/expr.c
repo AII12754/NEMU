@@ -146,8 +146,8 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
-	int op_pos[5] = {0}, parentheses_count = 0;
-	for(int i = p; i <= q; i++) {
+	int i, op_pos[5] = {0}, parentheses_count = 0;
+	for(i = p; i <= q; i++) {
 		switch(tokens[i].type) {
 			case '(': 
 				parentheses_count++;
@@ -179,7 +179,7 @@ int find_dominant_op(int p, int q) {
 		}
 	}
 
-	for(int i = 0; i < 5; i++) if(op_pos[i]) return op_pos[i];
+	for(i = 0; i < 5; i++) if(op_pos[i]) return op_pos[i];
 	return 0;
 }
 
@@ -190,6 +190,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	}
 	else if(p == q) {
 		uint32_t val = 0;
+		int i;
 		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
 		else if(tokens[p].type == HEX) sscanf(tokens[p].str, "%x", &val);
 		else if(tokens[p].type == REG) {
@@ -197,7 +198,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				val = cpu.eip;
 				Log("register $eip = %u", val);
 			}
-			else for(int i = 0; i <= 8; i++) {
+			else for(i = 0; i <= 8; i++) {
 				if(i == 8) {
 					*legal_check = false;
 					return 0;
@@ -314,7 +315,8 @@ uint32_t expr(char *e, bool *legal_check) {
 	}
 
 	// recognize dereference and negative
-	for(int i = 0; i < nr_token - 1; i++) {
+	int i;
+	for(i = 0; i < nr_token - 1; i++) {
 		if(tokens[i].type == '*' && (!i || !(tokens[i - 1].type == NUM 
 		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
 		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
@@ -328,7 +330,7 @@ uint32_t expr(char *e, bool *legal_check) {
 	}
 
 	//DEBUG
-	for(int i = 0; i < nr_token; i++) Log("%s", tokens[i].str);
+	//for(int i = 0; i < nr_token; i++) Log("%s", tokens[i].str);
 
 	/* TODO: Insert codes to evaluate the expression. */
 
