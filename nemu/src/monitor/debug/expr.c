@@ -122,9 +122,9 @@ static bool make_token(char *e) {
 }
 
 bool check_parentheses(int p, int q, bool *legal_check) {
-	int parentheses_count = 0;
+	int i, parentheses_count = 0;
 	bool whole_included = true;
-	for(int i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
+	for(i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
 		if(parentheses_count < 0) *legal_check = false;
 		switch(tokens[i].type) {
 			case '(': 
