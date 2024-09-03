@@ -146,7 +146,7 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
-	int op_pos[4] = {0}, parentheses_count = 0;
+	int op_pos[5] = {0}, parentheses_count = 0;
 	for(int i = p; i <= q; i++) {
 		switch(tokens[i].type) {
 			case '(': 
@@ -171,10 +171,15 @@ int find_dominant_op(int p, int q) {
 			case '/':
 				if(!parentheses_count) op_pos[3] = i;
 				break;
+			case NEG:
+			case NOT:
+			case DEREF:
+				if(!parentheses_count) op_pos[4] = i;
+				break;
 		}
 	}
 
-	for(int i = 0; i < 4; i++) if(op_pos[i]) return op_pos[i];
+	for(int i = 0; i < 5; i++) if(op_pos[i]) return op_pos[i];
 	return 0;
 }
 
@@ -266,7 +271,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
 		uint32_t val2 = eval(op_pos + 1, q, legal_check);
 
-		if(!*legal_check) return 0;
+		//if(!*legal_check) return 0;
 		switch(tokens[op_pos].type) {
 			case '+':
 				return val1 + val2;
@@ -284,6 +289,16 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return val1 && val2;
 			case OR:
 				return val1 || val2;
+			case NEG:
+				*legal_check = true;
+				return -val2;
+			case NOT:
+				*legal_check = true;
+				return !val2;
+			case DEREF:
+				*legal_check = true;
+				val2 = swaddr_read(val2, 4);
+				return val2;
 			default:
 				*legal_check = false;
 				return 0;
