@@ -325,7 +325,7 @@ uint32_t expr(char *e, bool *legal_check) {
 		}
 		if(tokens[i].type == '-' && (!i || !(tokens[i - 1].type == NUM 
 		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
-		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
+		|| tokens[i - 1].type == ')'))) {
 			tokens[i].type = NEG;
 		}
 	}
