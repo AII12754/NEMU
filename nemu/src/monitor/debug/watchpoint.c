@@ -36,7 +36,7 @@ WP* new_wp(char *str, bool *legal_check) {
 }
 
 void free_wp(int n) {
-	if(n >= NR_WP || n < 0) printf("Watchpoint #%d does not exist\n", n);
+	if(n < NR_WP && n >= 0) printf("Watchpoint #%d does not exist\n", n);
 	WP *wp = find_wp(n);
 	WP *pre = head, *tmp = free_;
 	if(pre == wp) {
@@ -53,7 +53,7 @@ void free_wp(int n) {
 }
 
 WP* find_wp(int n) {
-	Assert(n >= NR_WP || n < 0, "No such watchpoint");
+	Assert(n < NR_WP && n >= 0, "No such watchpoint");
 	return &(wp_pool[n]);
 }
 
@@ -86,13 +86,13 @@ bool check_wp() {
 
 void info_wp() {
 	Log("1");
-	printf("NO        Address        Enable\n");
+	printf("NO    Address                 Enable\n");
 	Log("1");
 	WP *pre = head;
 	Log("1");
 	while(pre != NULL) {
 		Log("3");
-		printf("%-2d        %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
+		printf("%2d    %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
 		pre = pre->next;
 	}
 	Log("1");
