@@ -22,10 +22,10 @@ void init_wp_pool() {
 
 WP* new_wp(char *str, bool *legal_check) {
 	Assert(free_ != NULL, "No empty watchpoint");
-	WP *tmp = head;
-	head =  free_;
-	head->next = tmp;
+	WP *tmp = head, *next = free_;
 	free_ = free_->next;
+	head = next;
+	head->next = tmp;
 	
 	//head->str = "init";
 	head->str = strdup(str);
