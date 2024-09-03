@@ -95,12 +95,12 @@ static int cmd_x(char *args)
 	uint32_t addr = (uint32_t)strtol(arg[1], NULL, 16);
 
 	uint32_t data;
-	printf("0X%08X: ", addr);
+	//printf("0X%08X: ", addr);
 	for (i = 0; i < len; i++)
 	{
 		data = swaddr_read(addr, 4);
-		if (!(i % 4) && i) printf("\n0X%08X: ", addr);
-		printf("0X%08X ", data);
+		//if (!(i % 4) && i) printf("\n0X%08X: ", addr);
+		printf("0x%08x ", data);
 		addr += 4;
 	}
 	printf("\n");
