@@ -36,19 +36,16 @@ WP* new_wp(char *str, bool *legal_check) {
 }
 
 void free_wp(int n) {
-	if(n >= NR_WP || n < 0) printf("Watchpoint #%d does not exist\n", n);
+	if(n >= NR_WP || n < 0) {
+		printf("Watchpoint #%d does not exist\n", n);
+		return;
+	}
 	WP *wp = &(wp_pool[n]);
-	Log("1");
 	WP *pre = head, *tmp = free_;
-	Log("1");
 	if(pre == wp) {
-		Log("1");
 		head = head->next;
-		Log("1");
 		free_ = pre;
-		Log("1");
 		free_->next = tmp;
-		Log("1");
 	}
 	else {
 		while(pre != NULL && pre->next != wp) pre = pre->next;
@@ -64,19 +61,12 @@ void free_wp(int n) {
 }
 
 bool check_wp() {
-	Log("1");
 	WP *pre = head;
-	Log("1");
 	bool changed = false;
-	Log("1");
 	while(pre != NULL) {
-		Log("11");
 		bool legal_check = true;
-		Log("11");
 		uint32_t val = expr(pre->str, &legal_check);
-		Log("11");
 		if(val != pre->val) {
-			Log("11");
 			printf("Hint watchpoint %d at address 0x%08x, expr = %s\n", pre->NO, cpu.eip, pre->str);
 			printf("old value = %08x\n", pre->val);
 			printf("new value = %08x\n", val);
@@ -84,27 +74,17 @@ bool check_wp() {
 			changed = true;
 		}
 		pre = pre->next;
-		Log("11");
 	}
-	Log("1");
 	return changed;
 }
 
 void info_wp() {
-	Log("1");
 	printf("NO        Address                 Enable\n");
-	Log("1");
 	WP *pre = head;
-	Log("1");
 	while(pre != NULL) {
-		Log("3");
 		printf("%2d        %-16s        0x%08x\n", pre->NO, pre->str, pre->val);
 		pre = pre->next;
 	}
-	Log("1");
 	return;
 }
-
-/* TODO: Implement the functionality of watchpoint */
-
 

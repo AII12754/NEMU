@@ -190,7 +190,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		else if(tokens[p].type == REG) {
 			if(strcmp(tokens[p].str + 1, "eip") == 0) {
 				val = cpu.eip;
-				Log("register $eip = %u", val);
+				//Log("register $eip = %u", val);
 			}
 			else for(int i = 0; i <= 8; i++) {
 				if(i == 8) {
@@ -200,19 +200,19 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				else if(strcmp(tokens[p].str + 1, regsl[i]) == 0) {
 					//sscanf(reg_l(i), "%u", &val);
 					val = reg_l(i);
-					Log("register %s = %u", tokens[p].str, val);
+					//Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsw[i]) == 0) {
 					//sscanf((uint32_t)reg_w(i), "%u", &val);
 					val = reg_w(i);
-					Log("register %s = %u", tokens[p].str, val);
+					//Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsb[i]) == 0) {
 					//sscanf((uint32_t)reg_b(i), "%u", &val);
 					val = reg_b(i);
-					Log("register %s = %u", tokens[p].str, val);
+					//Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 			}
@@ -223,14 +223,14 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		}
 
 		//DEBUG
-		Log("check num at %d : %u", p, val);
+		//Log("check num at %d : %u", p, val);
 
 		return val;
 	}
 	else if(check_parentheses(p, q, legal_check)) {
 
 		//DEBUG
-		Log("slim parentheses");
+		//Log("slim parentheses");
 
 		return eval(p + 1, q - 1, legal_check);
 	}
@@ -260,7 +260,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
-		Log("dominant op at %d", op_pos);
+		//Log("dominant op at %d", op_pos);
 
 		if(!op_pos) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
@@ -313,7 +313,7 @@ uint32_t expr(char *e, bool *legal_check) {
 	}
 
 	//DEBUG
-	for(int i = 0; i < nr_token; i++) Log("%s", tokens[i].str);
+	//for(int i = 0; i < nr_token; i++) Log("%s", tokens[i].str);
 
 	/* TODO: Insert codes to evaluate the expression. */
 
