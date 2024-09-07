@@ -7,7 +7,9 @@ static void do_execute() {
     Log("%x", cpu.eip);
     MEM_W(cpu.esp, cpu.eip + DATA_BYTE + 1);
     Log("%x", op_src->val);
+    Log("%x", cpu.eip);
     cpu.eip += op_src->val;
+    Log("%x", cpu.eip);
     print_asm(str(instr) " %x", cpu.eip + 1 + DATA_BYTE);
 }
 
