@@ -3,13 +3,14 @@
 #define instr call
 
 static void do_execute() {
-    cpu.esp -= DATA_BYTE;
-    MEM_W(cpu.esp, cpu.eip);
+    cpu.esp -= 4;
+    MEM_W(cpu.esp, cpu.eip + DATA_BYTE + 1);
     cpu.eip += op_src->val;
     print_asm(str(instr) " %x", cpu.eip + 1 + DATA_BYTE);
 }
 
 make_instr_helper(i)
+
 /*
 #if DATA_BYTE == 4
 
