@@ -4,7 +4,7 @@
 
 static void do_execute() {
 	cpu.esp -= DATA_BYTE;
-    cpu.esp = MEM_R(REG(ops_decoded.opcode - 0x50));
+    cpu.esp = REG(ops_decoded.opcode - 0x50);
 	print_asm(str(instr) " %x", cpu.eip + 1 + DATA_BYTE);
 }
 
