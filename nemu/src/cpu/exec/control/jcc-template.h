@@ -1,14 +1,13 @@
 #include "cpu/exec/template-start.h"
 
-#define instr jcc
+#define instr jcc_z
 
-#if DATA_BYTE == 1
-make_helper(jcc_z) {
+static void do_execute() {
     if(cpu.eflags.ZF == 1) {
         cpu.eip += op_src->val;
     }
-    return 2;
 }
-#endif
+
+make_instr_helper(i)
 
 #include "cpu/exec/template-end.h"
