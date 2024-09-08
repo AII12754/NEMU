@@ -32,9 +32,10 @@ make_helper(concat(decode_si_, SUFFIX)) {
 	 *
 	op_src->simm = ???
 	 */
-	panic("please implement me");
-
+	op_src->simm = MEM_R(eip);
+	Log("%x", op_src->simm);
 	op_src->val = op_src->simm;
+	Log("%x", op_src->val);
 
 #ifdef DEBUG
 	snprintf(op_src->str, OP_STR_SIZE, "$0x%x", op_src->val);
