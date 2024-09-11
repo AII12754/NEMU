@@ -3,7 +3,7 @@
 #define instr je
 static void do_execute() {
     if(cpu.eflags.ZF == 1) {
-        cpu.eip += op_src->val;
+        cpu.eip = op_src->val;
     }
 }
 make_instr_helper(i)
@@ -12,7 +12,7 @@ make_instr_helper(i)
 #define instr jbe
 static void do_execute() {
     if(cpu.eflags.ZF == 1 || cpu.eflags.CF == 1) {
-        cpu.eip += op_src->val;
+        cpu.eip = op_src->val;
     }
 }
 make_instr_helper(i)
@@ -21,7 +21,7 @@ make_instr_helper(i)
 #define instr jne
 static void do_execute() {
     if(cpu.eflags.ZF == 0) {
-        cpu.eip += op_src->val;
+        cpu.eip = op_src->val;
     }
 }
 make_instr_helper(i)
