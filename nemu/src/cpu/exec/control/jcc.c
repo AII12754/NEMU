@@ -1,6 +1,6 @@
 #include "cpu/exec/helper.h"
 
-#define instr jcc_z
+#define instr je
 #define DATA_BYTE 1
 #include "jcc-template.h"
 #undef DATA_BYTE

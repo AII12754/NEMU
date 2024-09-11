@@ -1,6 +1,6 @@
 #include "cpu/exec/template-start.h"
 
-#if instr == jcc_z
+#if instr == je
 static void do_execute() {
     if(cpu.eflags.ZF == 1) {
         cpu.eip += op_src->val;
