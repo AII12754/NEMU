@@ -2,21 +2,20 @@
 
 #define instr push
 
-/*
 static void do_execute() {
-	cpu.esp -= DATA_BYTE;
-    cpu.esp = REG(ops_decoded.opcode - 0x50);
-	print_asm(str(instr) " %x", cpu.eip + 1 + DATA_BYTE);
+	swaddr_write(cpu.esp - 4, 4, op_src->val);
+	cpu.esp -= 4;
+	print_asm_template1();
 }
 
+#if DATA_BYTE == 2 || DATA_BYTE == 4
+make_instr_helper(r)
+make_instr_helper(rm)
 make_instr_helper(i)
-*/
+#endif
 
-make_helper(concat(push_, SUFFIX)) {
-	cpu.esp -= DATA_BYTE;
-    MEM_W(cpu.esp, REG(ops_decoded.opcode - 0x50));
-	print_asm(str(instr) " %x", cpu.eip + 1 + DATA_BYTE);
-	return 1;
-}
+#if DATA_BYTE == 1
+make_instr_helper(si)
+#endif
 
 #include "cpu/exec/template-end.h"
