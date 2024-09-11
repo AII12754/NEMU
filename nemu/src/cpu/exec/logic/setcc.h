@@ -2,5 +2,6 @@
 #define __SETCC_H__
 
 make_helper(setne_rm_b);
+make_helper(sete_rm_b);
 
 #endif
