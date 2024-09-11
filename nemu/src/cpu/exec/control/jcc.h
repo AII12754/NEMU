@@ -3,5 +3,6 @@
 
 make_helper(je_i_b);
 make_helper(jbe_i_b);
+make_helper(jne_i_b);
 
 #endif

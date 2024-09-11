@@ -12,6 +12,12 @@ static void do_execute() {
         cpu.eip += op_src->val;
     }
 }
+#elif instr == jne
+static void do_execute() {
+    if(cpu.eflags.ZF == 0) {
+        cpu.eip += op_src->val;
+    }
+}
 #endif
 
 make_instr_helper(i)
