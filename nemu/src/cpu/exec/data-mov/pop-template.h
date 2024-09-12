@@ -4,7 +4,7 @@
 
 static void do_execute() {
 	OPERAND_W(op_src, swaddr_read(cpu.esp, 4));
-	cpu.esp += 4;
+	cpu.esp += DATA_BYTE;
 	print_asm_template1();
 }
 
