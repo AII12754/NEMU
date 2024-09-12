@@ -1,7 +1,7 @@
 #include "FLOAT.h"
 #include <stdint.h>
 
-typedef union{
+typedef union {
 	struct {
 		uint32_t m : 23;
 		uint32_t e : 8;
@@ -37,7 +37,7 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * out another way to perform the division.
 	 */
 
-		FLOAT q, r;
+        FLOAT q, r;
 	asm volatile("idiv %2" : "=a"(q), "=d"(r) : "r"(b), "a"(a << 16), "d"(a >> 16));
 	return q;
 }
@@ -52,12 +52,14 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
+
 	Float f;
 	void *temp = &a;
 	f.val = *(uint32_t *)temp;
 	uint32_t m = f.m | (1 << 23);
 	int shift = 134 - (int)f.e;
-	if(shift < 0){
+//	assert(shift <= 23 && shift >= -7);
+	if(shift < 0) {
 		m <<= (-shift);
 	}
 	else {
@@ -67,7 +69,7 @@ FLOAT f2F(float a) {
 }
 
 FLOAT Fabs(FLOAT a) {
-	return __scale(a);
+        return __scale(a);
 }
 
 /* Functions below are already implemented */
