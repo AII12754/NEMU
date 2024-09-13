@@ -5,9 +5,10 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <elf.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM, HEX, NEG, DEREF, REF, AND, OR, NOT, NEQ, REG
+	NOTYPE = 256, EQ, NUM, HEX, NEG, DEREF, REF, AND, OR, NOT, NEQ, REG, MARK
 
 	/* TODO: Add more token types */
 
@@ -27,7 +28,7 @@ static struct rule {
 	{"0[xX][0-9a-fA-F]+", HEX},					// HEX numbers
 	{"[0-9]+", NUM},							// numbers
 	{"\\$[a-zA-Z]+", REG},						// registers
-
+	{"\\b[a-zA-Z0-9_]+\\b",MARK},
 	{"&&", AND},								// and
 	{"\\|\\|", OR},								// or
 	{"==", EQ},									// equal
@@ -46,6 +47,8 @@ static struct rule {
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
 
 static regex_t re[NR_REGEX];
+
+uint32_t GetMarkValue(char* str,bool* legal_check);
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -191,7 +194,11 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	else if(p == q) {
 		uint32_t val = 0;
 		int i;
-		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
+		if(tokens[p].type == MARK) {
+			val = GetMarkValue(tokens[p].str, legal_check);
+			if(!*legal_check) return 0;
+		}
+		else if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
 		else if(tokens[p].type == HEX) sscanf(tokens[p].str, "%x", &val);
 		else if(tokens[p].type == REG) {
 			if(strcmp(tokens[p].str + 1, "eip") == 0) {
@@ -319,12 +326,12 @@ uint32_t expr(char *e, bool *legal_check) {
 	int i;
 	for(i = 0; i < nr_token - 1; i++) {
 		if(tokens[i].type == '*' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX || tokens[i - 1].type == MARK
 		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
 			tokens[i].type = DEREF;
 		}
 		if(tokens[i].type == '-' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX || tokens[i - 1].type == MARK
 		|| tokens[i - 1].type == ')'))) {
 			tokens[i].type = NEG;
 		}
