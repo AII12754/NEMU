@@ -149,7 +149,7 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
-	int i, op_pos[5] = {0}, parentheses_count = 0;
+	int i, op_pos[5] = {-1, -1, -1, -1, -1}, parentheses_count = 0;
 	for(i = p; i <= q; i++) {
 		switch(tokens[i].type) {
 			case '(': 
@@ -182,7 +182,7 @@ int find_dominant_op(int p, int q) {
 		}
 	}
 
-	for(i = 0; i < 5; i++) if(op_pos[i]) return op_pos[i];
+	for(i = 0; i < 5; i++) if(op_pos[i] != -1) return op_pos[i];
 	return -1;
 }
 
