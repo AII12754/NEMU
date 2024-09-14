@@ -252,6 +252,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	}
 	else if(*legal_check) {
 		//单目运算符处理
+		/*
 		if(p + 1 == q) {
 			Log("ENTER");
 			uint32_t val = 0;
@@ -273,6 +274,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return -val;
 			}
 		}
+		*/
 
 		int op_pos = find_dominant_op(p, q);
 
