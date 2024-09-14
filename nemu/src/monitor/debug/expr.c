@@ -276,6 +276,12 @@ uint32_t eval(int p, int q, bool *legal_check) {
 
 		//DEBUG
 		Log("dominant op at %d", op_pos);
+		
+		if(tokens[op_pos].type == MARK) {
+			int val = eval(op_pos + 1, q, legal_check);
+			val = swaddr_read(val, 4);
+			return val;
+		}
 
 		if(op_pos == -1) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
