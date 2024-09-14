@@ -182,7 +182,7 @@ int find_dominant_op(int p, int q) {
 		}
 	}
 
-	for(i = 0; i < 5; i++) if(op_pos[i] != -1) return op_pos[i];
+	for(i = 0; i < 5; i++) if(op_pos[i] > -1) return op_pos[i];
 	return -1;
 }
 
