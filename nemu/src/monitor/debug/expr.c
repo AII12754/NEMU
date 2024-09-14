@@ -282,9 +282,9 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		Log("dominant op at %d", op_pos);
 		
 		if(tokens[op_pos].type == MARK) {
-			int val = eval(op_pos + 1, q, legal_check);
-			val = swaddr_read(val, 4);
-			return val;
+			swaddr_t addr;
+			addr = (swaddr_t)eval(op_pos + 1, q, legal_check);
+			return swaddr_read(addr, 4);
 		}
 
 		if(op_pos == -1) *legal_check = false;
@@ -317,8 +317,9 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return !val2;
 			case DEREF:
 				*legal_check = true;
-				val2 = swaddr_read(val2, 4);
-				return val2;
+				swaddr_t addr;
+				addr = (swaddr_t)eval(op_pos + 1, q, legal_check);
+				return swaddr_read(addr, 4);
 			default:
 				*legal_check = false;
 				return 0;
