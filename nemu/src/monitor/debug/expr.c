@@ -196,9 +196,8 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		uint32_t val = 0;
 		int i;
 		if(tokens[p].type == MARK) {
-			swaddr_t addr;
-			addr = GetMarkValue(tokens[p].str, legal_check);
-			Log("MEM_ADDR %u", addr);
+			val = GetMarkValue(tokens[p].str, legal_check);
+			Log("MEM_ADDR %u", val);
 			if(!*legal_check) return 0;
 		}
 		else if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
