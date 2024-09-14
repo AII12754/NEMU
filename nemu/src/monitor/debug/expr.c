@@ -341,6 +341,7 @@ uint32_t expr(char *e, bool *legal_check) {
 		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX || tokens[i - 1].type == MARK
 		|| tokens[i - 1].type == ')'))) {
 			tokens[i].type = NEG;
+			Log("Neg");
 		}
 	}
 
