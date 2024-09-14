@@ -281,10 +281,12 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		//DEBUG
 		Log("dominant op at %d", op_pos);
 		
-		if(tokens[op_pos].type == MARK) {
-			swaddr_t addr;
+		if(tokens[op_pos].type == DEREF) {
+			swaddr_t addr = 0;
+			uint32_t val = 0;
 			addr = (swaddr_t)eval(op_pos + 1, q, legal_check);
-			return swaddr_read(addr, 4);
+			val = swaddr_read(addr, 4);
+			return val;
 		}
 
 		if(op_pos == -1) *legal_check = false;
