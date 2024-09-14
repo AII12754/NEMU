@@ -183,7 +183,7 @@ int find_dominant_op(int p, int q) {
 	}
 
 	for(i = 0; i < 5; i++) if(op_pos[i]) return op_pos[i];
-	return 0;
+	return -1;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
@@ -196,6 +196,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		int i;
 		if(tokens[p].type == MARK) {
 			val = GetMarkValue(tokens[p].str, legal_check);
+			Log("MEM_ADDR %u", val);
 			if(!*legal_check) return 0;
 		}
 		else if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
@@ -276,7 +277,7 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		//DEBUG
 		Log("dominant op at %d", op_pos);
 
-		if(!op_pos) *legal_check = false;
+		if(op_pos == -1) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
 		uint32_t val2 = eval(op_pos + 1, q, legal_check);
 
