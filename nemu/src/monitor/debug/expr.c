@@ -149,6 +149,7 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
+	Log("find domin");
 	int i, op_pos[5] = {-1, -1, -1, -1, -1}, parentheses_count = 0;
 	for(i = p; i <= q; i++) {
 		switch(tokens[i].type) {
@@ -178,8 +179,6 @@ int find_dominant_op(int p, int q) {
 			case NOT:
 			case DEREF:
 				if(!parentheses_count) op_pos[4] = i;
-				break;
-			default:
 				break;
 		}
 	}
