@@ -28,7 +28,7 @@ static struct rule {
 	{"0[xX][0-9a-fA-F]+", HEX},					// HEX numbers
 	{"[0-9]+", NUM},							// numbers
 	{"\\$[a-zA-Z]+", REG},						// registers
-	{"\\b[a-zA-Z0-9_]+\\b",MARK},
+	{"[a-zA-Z_]\\w{0,31}", MARK},
 	{"&&", AND},								// and
 	{"\\|\\|", OR},								// or
 	{"==", EQ},									// equal
