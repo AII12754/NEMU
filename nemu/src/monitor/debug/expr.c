@@ -179,6 +179,8 @@ int find_dominant_op(int p, int q) {
 			case DEREF:
 				if(!parentheses_count) op_pos[4] = i;
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -195,8 +197,9 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		uint32_t val = 0;
 		int i;
 		if(tokens[p].type == MARK) {
-			val = GetMarkValue(tokens[p].str, legal_check);
-			Log("MEM_ADDR %u", val);
+			swaddr_t addr;
+			addr = GetMarkValue(tokens[p].str, legal_check);
+			Log("MEM_ADDR %u", addr);
 			if(!*legal_check) return 0;
 		}
 		else if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
