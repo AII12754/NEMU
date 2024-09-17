@@ -1,8 +1,21 @@
 #include "FLOAT.h"
+#include <stdint.h>
+
+typedef union{
+	struct {
+		uint32_t m : 23;
+		uint32_t e : 8;
+		uint32_t s : 1;
+	};
+	uint32_t val;
+} Float;
+
+#define __sign(x) ((x) & 0x80000000)
+#define __scale(x) (__sign(x) ? -(x) : (x))
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-	long long ret = 1ll * a * b;
-	return (FLOAT)(ret >> 16);
+	int64_t scale = ((int64_t)a * (int64_t)b) >> 16;
+	return scale;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
@@ -23,22 +36,10 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-	int op = 1;
-	if ((a < 0) == 1) op *= -1,a = -a;
-	if ((b < 0) == 1) op *= -1,b = -b;
 
-	int ret = a / b;
-	a %= b;
-
-	int i;
-	for (i = 0;i < 16;i ++){
-		a <<= 1;
-		ret <<= 1;
-		if (a >= b) a -= b, ret |= 1;
-	}
-	return op * ret; 
-
-	
+		FLOAT q, r;
+	asm volatile("idiv %2" : "=a"(q), "=d"(r) : "r"(b), "a"(a << 16), "d"(a >> 16));
+	return q;
 }
 
 FLOAT f2F(float a) {
@@ -51,29 +52,22 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
-
-	int b = *(int *)&a;
-	int sign = b & 0x80000000;
-	int exp = (b >> 23) & 0xff;
-	int last = b & 0x7fffff;	
-	
-	if(exp == 255) {
-		if (sign) return -0x7fffffff;
-		else return 0x7fffffff;
+	Float f;
+	void *temp = &a;
+	f.val = *(uint32_t *)temp;
+	uint32_t m = f.m | (1 << 23);
+	int shift = 134 - (int)f.e;
+	if(shift < 0){
+		m <<= (-shift);
 	}
-	
-	if(exp == 0) return 0;
-
-	last |= 1 << 23;
-	exp -= 134;	
-	if (exp < 0) last >>= -exp;
-	if (exp > 0) last <<= exp;
-
-	if (sign) return -last;else return last;
+	else {
+		m >>= shift;
+	}
+	return (__sign(f.val) ? -m : m);
 }
 
 FLOAT Fabs(FLOAT a) {
-	if (a < 0) return -a;else return a;
+	return __scale(a);
 }
 
 /* Functions below are already implemented */
