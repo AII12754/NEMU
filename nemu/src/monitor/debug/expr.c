@@ -5,9 +5,10 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <elf.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM, HEX, NEG, DEREF, REF, AND, OR, NOT, NEQ, REG
+	NOTYPE = 256, EQ, NUM, HEX, NEG, DEREF, REF, AND, OR, NOT, NEQ, REG, MARK
 
 	/* TODO: Add more token types */
 
@@ -27,7 +28,7 @@ static struct rule {
 	{"0[xX][0-9a-fA-F]+", HEX},					// HEX numbers
 	{"[0-9]+", NUM},							// numbers
 	{"\\$[a-zA-Z]+", REG},						// registers
-
+	{"[a-zA-Z_]+", MARK},
 	{"&&", AND},								// and
 	{"\\|\\|", OR},								// or
 	{"==", EQ},									// equal
@@ -46,6 +47,8 @@ static struct rule {
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
 
 static regex_t re[NR_REGEX];
+
+uint32_t GetMarkValue(char* str,bool* legal_check);
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -122,9 +125,9 @@ static bool make_token(char *e) {
 }
 
 bool check_parentheses(int p, int q, bool *legal_check) {
-	int parentheses_count = 0;
+	int i, parentheses_count = 0;
 	bool whole_included = true;
-	for(int i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
+	for(i = p; i <= q; i++) {			// TODO:此处重复执行，考虑优化
 		if(parentheses_count < 0) *legal_check = false;
 		switch(tokens[i].type) {
 			case '(': 
@@ -146,8 +149,9 @@ bool check_parentheses(int p, int q, bool *legal_check) {
 }
 
 int find_dominant_op(int p, int q) {
-	int op_pos[4] = {0}, parentheses_count = 0;
-	for(int i = p; i <= q; i++) {
+	Log("find domin");
+	int i, op_pos[5] = {-1, -1, -1, -1, -1}, parentheses_count = 0;
+	for(i = p; i <= q; i++) {
 		switch(tokens[i].type) {
 			case '(': 
 				parentheses_count++;
@@ -171,11 +175,16 @@ int find_dominant_op(int p, int q) {
 			case '/':
 				if(!parentheses_count) op_pos[3] = i;
 				break;
+			case NEG:
+			case NOT:
+			case DEREF:
+				if(!parentheses_count) op_pos[4] = i;
+				break;
 		}
 	}
 
-	for(int i = 0; i < 4; i++) if(op_pos[i]) return op_pos[i];
-	return 0;
+	for(i = 0; i < 5; i++) if(op_pos[i] > -1) return op_pos[i];
+	return -1;
 }
 
 uint32_t eval(int p, int q, bool *legal_check) {
@@ -185,14 +194,20 @@ uint32_t eval(int p, int q, bool *legal_check) {
 	}
 	else if(p == q) {
 		uint32_t val = 0;
-		if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
+		int i;
+		if(tokens[p].type == MARK) {
+			val = GetMarkValue(tokens[p].str, legal_check);
+			Log("MEM_ADDR %u", val);
+			if(!*legal_check) return 0;
+		}
+		else if(tokens[p].type == NUM) sscanf(tokens[p].str, "%u", &val);
 		else if(tokens[p].type == HEX) sscanf(tokens[p].str, "%x", &val);
 		else if(tokens[p].type == REG) {
 			if(strcmp(tokens[p].str + 1, "eip") == 0) {
 				val = cpu.eip;
-				//Log("register $eip = %u", val);
+				Log("register $eip = %u", val);
 			}
-			else for(int i = 0; i <= 8; i++) {
+			else for(i = 0; i <= 8; i++) {
 				if(i == 8) {
 					*legal_check = false;
 					return 0;
@@ -200,19 +215,19 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				else if(strcmp(tokens[p].str + 1, regsl[i]) == 0) {
 					//sscanf(reg_l(i), "%u", &val);
 					val = reg_l(i);
-					//Log("register %s = %u", tokens[p].str, val);
+					Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsw[i]) == 0) {
 					//sscanf((uint32_t)reg_w(i), "%u", &val);
 					val = reg_w(i);
-					//Log("register %s = %u", tokens[p].str, val);
+					Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 				else if(strcmp(tokens[p].str + 1, regsb[i]) == 0) {
 					//sscanf((uint32_t)reg_b(i), "%u", &val);
 					val = reg_b(i);
-					//Log("register %s = %u", tokens[p].str, val);
+					Log("register %s = %u", tokens[p].str, val);
 					break;
 				}
 			}
@@ -223,20 +238,22 @@ uint32_t eval(int p, int q, bool *legal_check) {
 		}
 
 		//DEBUG
-		//Log("check num at %d : %u", p, val);
+		Log("check num at %d : %u", p, val);
 
 		return val;
 	}
 	else if(check_parentheses(p, q, legal_check)) {
 
 		//DEBUG
-		//Log("slim parentheses");
+		Log("slim parentheses");
 
 		return eval(p + 1, q - 1, legal_check);
 	}
 	else if(*legal_check) {
 		//单目运算符处理
+		/*
 		if(p + 1 == q) {
+			Log("ENTER");
 			uint32_t val = 0;
 			swaddr_t addr = 0;
 			switch (tokens[p].type)
@@ -256,17 +273,26 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return -val;
 			}
 		}
+		*/
 
 		int op_pos = find_dominant_op(p, q);
 
 		//DEBUG
-		//Log("dominant op at %d", op_pos);
+		Log("dominant op at %d", op_pos);
+		
+		if(tokens[op_pos].type == DEREF) {
+			swaddr_t addr = 0;
+			uint32_t val = 0;
+			addr = (swaddr_t)eval(op_pos + 1, q, legal_check);
+			val = swaddr_read(addr, 4);
+			return val;
+		}
 
-		if(!op_pos) *legal_check = false;
+		if(op_pos == -1) *legal_check = false;
 		uint32_t val1 = eval(p, op_pos - 1, legal_check);
 		uint32_t val2 = eval(op_pos + 1, q, legal_check);
 
-		if(!*legal_check) return 0;
+		//if(!*legal_check) return 0;
 		switch(tokens[op_pos].type) {
 			case '+':
 				return val1 + val2;
@@ -284,6 +310,17 @@ uint32_t eval(int p, int q, bool *legal_check) {
 				return val1 && val2;
 			case OR:
 				return val1 || val2;
+			case NEG:
+				*legal_check = true;
+				return -val2;
+			case NOT:
+				*legal_check = true;
+				return !val2;
+			case DEREF:
+				*legal_check = true;
+				swaddr_t addr;
+				addr = (swaddr_t)eval(op_pos + 1, q, legal_check);
+				return swaddr_read(addr, 4);
 			default:
 				*legal_check = false;
 				return 0;
@@ -299,16 +336,18 @@ uint32_t expr(char *e, bool *legal_check) {
 	}
 
 	// recognize dereference and negative
-	for(int i = 0; i < nr_token - 1; i++) {
+	int i;
+	for(i = 0; i < nr_token - 1; i++) {
 		if(tokens[i].type == '*' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX || tokens[i - 1].type == MARK
 		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
 			tokens[i].type = DEREF;
 		}
 		if(tokens[i].type == '-' && (!i || !(tokens[i - 1].type == NUM 
-		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX
-		|| tokens[i - 1].type == '(' || tokens[i - 1].type == ')'))) {
+		|| tokens[i - 1].type == REG || tokens[i - 1].type == HEX || tokens[i - 1].type == MARK
+		|| tokens[i - 1].type == ')'))) {
 			tokens[i].type = NEG;
+			Log("Neg");
 		}
 	}
 

@@ -60,14 +60,13 @@ static int cmd_si(char *args)
 static int cmd_info(char *args)
 {
 	char *arg = strtok(args, " ");
-
+	int i;
 	switch(*arg) {
 		case 'r':
-			for(int i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", regsl[i], reg_l(i), reg_l(i));
+			for(i = 0; i < 8; i++) printf("%-16s%-16u0X%08X\n", regsl[i], reg_l(i), reg_l(i));
 			printf("%-16s%-16u0X%08X\n", "eip", cpu.eip, cpu.eip);
 			break;
 		case 'w':
-			Log("2");
 			info_wp();
 			break;
 		default:
@@ -88,6 +87,7 @@ static int cmd_p(char *args)
 static int cmd_x(char *args)
 {
 	char *arg[2];
+	int i;
 	arg[0] = strtok(args, " ");
 	args += strlen(arg[0]) + 1;
 	arg[1] = strtok(args, " ");
@@ -96,11 +96,11 @@ static int cmd_x(char *args)
 
 	uint32_t data;
 	printf("0X%08X: ", addr);
-	for (int i = 0; i < len; i++)
+	for (i = 0; i < len; i++)
 	{
 		data = swaddr_read(addr, 4);
 		if (!(i % 4) && i) printf("\n0X%08X: ", addr);
-		printf("0X%08X ", data);
+		printf("0x%08x ", data);
 		addr += 4;
 	}
 	printf("\n");
