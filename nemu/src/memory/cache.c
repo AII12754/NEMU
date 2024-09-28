@@ -33,7 +33,7 @@ void init_cache() {
 }
 
 uint32_t cache_read(swaddr_t addr, size_t len) {
-    //Log("Hello read");
+    Log("%d", (int)len);
     int offset = (addr & b_MASK), set = ((addr >> b) & s_MASK), tag = ((addr >> b >> s) & t_MASK);
     int Len = len + offset;
     int i;
