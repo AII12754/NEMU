@@ -29,7 +29,6 @@ typedef struct {
 cache_set cache[S];
 
 void init_cache() {
-    Log("Hello");
     int i, j;
     for(i = 0; i < S; i++) {
         cache[i].used = 0;
