@@ -14,6 +14,11 @@
 
 uint32_t dram_read(hwaddr_t, size_t);
 
+typedef union {
+    uint8_t _8[4];
+    uint32_t _32;
+} DATA;
+
 typedef struct {
     uint8_t byte[B];
     uint8_t tag;
@@ -35,12 +40,9 @@ uint32_t cache_read(hwaddr_t addr, size_t len) {
     //Log("%d %d", addr, (int)len);
     int offset = (addr & b_MASK), set = ((addr >> b) & s_MASK), tag = ((addr >> b >> s) & t_MASK);
     int Len = len + offset;
-    int i;
+    int i, j;
 
-    union {
-        uint8_t _8[4];
-        uint32_t _32;
-    } data;
+    DATA data, temp;
     data._32 = 0;
 
     hwaddr_t dram_addr = (tag << b << s) + (set << b);
@@ -48,7 +50,10 @@ uint32_t cache_read(hwaddr_t addr, size_t len) {
 
     for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
 
-    for(i = 0; i < B; i++) target_line->byte[i] = dram_read(dram_addr + i, 1);
+    for(i = 0; i * 4 < B; i++) {
+        temp._32 = dram_read(dram_addr + i * 4, 4);
+        for(j = 0; j < 4; j++) target_line->byte[i * 4 + j] = temp._8[j];
+    }
     target_line->valid = true;
     target_line->tag = tag;
 
@@ -61,7 +66,10 @@ uint32_t cache_read(hwaddr_t addr, size_t len) {
         target_line = &cache[set].lines[rand() % E];
         for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
 
-        for(i = 0; i < B; i++) target_line->byte[i] = dram_read(dram_addr + i, 1);
+        for(i = 0; i * 4 < B; i++) {
+            temp._32 = dram_read(dram_addr + i * 4, 4);
+            for(j = 0; j < 4; j++) target_line->byte[i * 4 + j] = temp._8[j];
+        }
         target_line->valid = true;
         target_line->tag = tag;
         
@@ -75,14 +83,18 @@ void cache_write(hwaddr_t addr, size_t len, uint32_t Data) {
     //Log("Hello write");
     int offset = addr & b_MASK, set = (addr >> b) & s_MASK, tag = (addr >> b >> s) & t_MASK;
     int Len = len + offset;
-    int i;
+    int i, j;
+    DATA temp;
 
     while(Len > 0) {
         hwaddr_t dram_addr = (tag << b << s) + (set << b);
         cache_line *target_line= &cache[set].lines[rand() % E];
         
         for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
-        for(i = 0; i < B; i++) target_line->byte[i] = dram_read(dram_addr + i, 1);
+        for(i = 0; i * 4 < B; i++) {
+            temp._32 = dram_read(dram_addr + i * 4, 4);
+            for(j = 0; j < 4; j++) target_line->byte[i * 4 + j] = temp._8[j];
+        }
         target_line->valid = true;
         target_line->tag = tag;
         Len -= B;
