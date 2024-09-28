@@ -9,8 +9,8 @@ void cache_write(swaddr_t addr, size_t len, uint32_t data);
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	//Log("Hello read 0");
-	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
-	//return cache_read(addr, len);
+	//return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
+	return cache_read(addr, len);
 }
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
