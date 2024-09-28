@@ -78,8 +78,6 @@ void cache_write(swaddr_t addr, size_t len, uint32_t Data) {
     int Len = len + offset;
     int i;
 
-    swaddr_write(addr, len, Data);
-
     while(Len > 0) {
         swaddr_t dram_addr = (tag << b << s) + (set << b);
         cache_line *target_line= &cache[set].lines[rand() % E];
