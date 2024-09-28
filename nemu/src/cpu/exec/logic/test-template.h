@@ -9,8 +9,6 @@ static void do_execute () {
 	cpu.eflags.CF = 0;
 	cpu.eflags.OF = 0;
 
-	Log("%x", cpu.eflags.ZF);
-
 	print_asm_template2();
 }
 
