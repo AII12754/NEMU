@@ -23,99 +23,72 @@ typedef struct {
 
 typedef struct {
     cache_line lines[E];
-    int used;
 } cache_set;
 
 cache_set cache[S];
 
 void init_cache() {
     int i, j;
-    for(i = 0; i < S; i++) {
-        cache[i].used = 0;
-        for(j = 0; j < E; j++) {
-            cache[i].lines[j].valid = false;
-        }
-    }
+    for(i = 0; i < S; i++) for(j = 0; j < E; j++) cache[i].lines[j].valid = false;
 }
 
 uint32_t cache_read(swaddr_t addr, size_t len) {
     Log("Hello read");
     int offset = (addr & b_MASK), set = ((addr >> b) & s_MASK), tag = ((addr >> b >> s) & t_MASK);
-    int Len = (len + offset) / B + !!(len + offset);
+    int Len = len + offset;
     int i;
 
-    uint8_t data[2 * B] = {};
+    union {
+        uint8_t _8[4];
+        uint32_t _32;
+    } data;
+    data._32 = 0;
 
     swaddr_t dram_addr = (tag << b << s) + (set << b);
     cache_line *target_line = &cache[set].lines[rand() % E];
 
     for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
 
-    if(target_line == NULL) {
-        target_line = &cache[set].lines[rand() % E];
-        for(i = 0; i < B; i++) {
-            target_line->byte[i] = swaddr_read(dram_addr + i, 1);
-            data[i] = target_line->byte[i];
-        }
-        target_line->valid = true;
-        target_line->tag = tag;
-    } else {
-        for(i = 0; i < B; i++) {
-            data[i] = target_line->byte[i];
-        }
-    }
+    for(i = 0; i < B; i++) target_line->byte[i] = swaddr_read(dram_addr + i, 1);
+    target_line->valid = true;
+    target_line->tag = tag;
+
+    for(i = 0; i < len; i++) if(i + offset < B) data._8[i] = target_line->byte[offset + i];
+
 
     if(Len > B) {
-        dram_addr = (tag << b << s) + ((set + 1) << b);
-        for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line =  &cache[set].lines[i];
+        set++;
+        dram_addr = (tag << b << s) + (set << b);
+        target_line = &cache[set].lines[rand() % E];
+        for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
 
-        if(target_line == NULL) {
-            target_line = &cache[set + 1].lines[rand() % E];
-            for(i = 0; i < B; i++) {
-                target_line->byte[i] = swaddr_read(dram_addr + i, 1);
-                data[B + i] = target_line->byte[i];
-            }
-            target_line->valid = true;
-            target_line->tag = tag;
-        } else {
-            for(i = 0; i < B; i++) {
-                data[B + i] = target_line->byte[i];
-            }
-        }
+        for(i = 0; i < B; i++) target_line->byte[i] = swaddr_read(dram_addr + i, 1);
+        target_line->valid = true;
+        target_line->tag = tag;
+        
+        for(i = 0; i < len; i++) if(i + offset >= B) data._8[i] = target_line->byte[offset + i - B];
     }
 
-    return unalign_rw(data + offset, 4);
+    return data._32;
 }
 
-void cache_write(swaddr_t addr, size_t len, uint32_t data[]) {
+void cache_write(swaddr_t addr, size_t len, uint32_t Data) {
     Log("Hello write");
     int offset = addr & b_MASK, set = (addr >> b) & s_MASK, tag = (addr >> b >> s) & t_MASK;
     int Len = len + offset;
     int i;
 
-    for(i = 0; i < len; i++) swaddr_write(addr + i, 1, data[i]);
+    swaddr_write(addr, len, Data);
 
-    swaddr_t dram_addr = (tag << b << s) + (set << b);
-    cache_line *target_line;
-    
-    target_line = &cache[set].lines[rand() % E];
-    for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
-
-    for(i = 0; i < B; i++) target_line->byte[i] = swaddr_read(dram_addr + i, 1);
-    target_line->valid = true;
-    target_line->tag = tag;
-
-    if(Len > B) {
-        set++;
-        dram_addr = (tag << b << s) + ((set) << b);
-        target_line = &cache[set].lines[rand() % E];
-        for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line =  &cache[set].lines[i];
-
+    while(Len > 0) {
+        swaddr_t dram_addr = (tag << b << s) + (set << b);
+        cache_line *target_line= &cache[set].lines[rand() % E];
+        
+        for(i = 0; i < E; i++) if(cache[set].lines[i].valid && cache[set].lines[i].tag == tag) target_line = &cache[set].lines[i];
         for(i = 0; i < B; i++) target_line->byte[i] = swaddr_read(dram_addr + i, 1);
         target_line->valid = true;
         target_line->tag = tag;
+        Len -= B;
+        set++;
     }
 }
-
-// 1.解析地址  t e b  2.扫描是否存在   3.不存在：从dram中载入   4.读取信息，返回
-
