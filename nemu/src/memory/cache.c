@@ -39,6 +39,7 @@ void init_cache() {
 }
 
 uint32_t cache_read(swaddr_t addr, size_t len) {
+    Log("Hello read");
     int offset = (addr & b_MASK), set = ((addr >> b) & s_MASK), tag = ((addr >> b >> s) & t_MASK);
     int Len = (len + offset) / B + !!(len + offset);
     int i;
@@ -87,6 +88,7 @@ uint32_t cache_read(swaddr_t addr, size_t len) {
 }
 
 void cache_write(swaddr_t addr, size_t len, uint32_t data[]) {
+    Log("Hello write");
     int offset = addr & b_MASK, set = (addr >> b) & s_MASK, tag = (addr >> b >> s) & t_MASK;
     int Len = len + offset;
     int i;
